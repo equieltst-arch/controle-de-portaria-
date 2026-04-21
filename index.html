@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portaria PRO - BUCAGRANS</title>
+<style>
+:root {
+  --bg:#0d1117;
+  --surface:#161b22;
+  --surface2:#1c2330;
+  --border:#30363d;
+  --accent:#f0a500;
+  --green:#3fb950;
+  --blue:#388bfd;
+  --text:#e6edf3;
+  --muted:#8b949e;
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}
+body{background:var(--bg);color:var(--text);padding:20px}
+
+header{
+background:#ffffff;
+padding:15px;
+border-bottom:2px solid var(–accent);
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-radius:10px 10px 0 0;
+flex-wrap:wrap;
+gap:10px;
+color:#000;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin:15px 0;
+}
+.card{
+background:var(–surface);
+padding:15px;
+border-radius:var(–radius);
+border:1px solid var(–border);
+text-align:center;
+}
+
+.form-area{
+background:var(–surface);
+padding:20px;
+border-radius:var(–radius);
+margin-bottom:20px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+gap:10px;
+}
+
+input{
+background:var(–surface2);
+border:1px solid var(–border);
+padding:10px;
+border-radius:6px;
+color:#000000;
+width:100%;
+}
+button{
+background:var(–accent);
+color:#000;
+border:none;
+padding:10px;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+}
+
+/* TABS */
+.tabs-wrap{
+display:flex;
+gap:8px;
+margin-bottom:15px;
+flex-wrap:wrap;
+align-items:center;
+}
+.tab{
+background:var(–surface);
+border:1px solid var(–border);
+color:var(–muted);
+padding:8px 16px;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+font-size:13px;
+white-space:nowrap;
+}
+.tab.ativo{
+background:var(–accent);
+color:#000;
+border-color:var(–accent);
+}
+
+table{width:100%;border-collapse:collapse}
+th{padding:12px;border-bottom:2px solid var(–accent);text-align:left;color:var(–muted);font-size:12px;text-transform:uppercase;}
+td{padding:10px 12px;border-bottom:1px solid var(–border)}
+
+.badge{padding:4px 8px;border-radius:4px;font-size:11px;font-weight:bold}
+.dentro{background:#3fb95022;color:var(–green)}
+.saiu{background:#30363d;color:var(–muted)}
+
+.btn-saida{background:var(–blue);color:#fff;padding:5px 10px;font-size:12px;border:none;border-radius:4px;cursor:pointer;}
+
+.busca-wrap{margin-bottom:15px;}
+
+.secao-titulo{
+background:var(–surface2);
+border-left:3px solid var(–accent);
+padding:10px 15px;
+margin:10px 0 15px 0;
+font-weight:bold;
+font-size:13px;
+color:var(–accent);
+}
+.resumo-dia{
+margin-top:15px;
+padding:12px;
+background:var(–surface);
+border-radius:var(–radius);
+border:1px solid var(–border);
+font-size:13px;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:center;gap:12px">
+    <img src="logo-pch.png" alt="Logo PCH" style="height:48px;object-fit:contain">
+    <h2 style="color:#000">🚧 BUCAGRANS Portaria</h2>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+    <span id="fbStatus" style="display:inline-flex;align-items:center;gap:6px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:bold;color:#64748b;">
+      <span id="fbDot" style="width:8px;height:8px;border-radius:50%;background:#94a3b8;display:inline-block;"></span>
+      <span id="fbTxt">Conectando...</span>
+    </span>
+    <button onclick="exportar()">📊 Exportar CSV</button>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="card"><small>NO PÁTIO</small><div id="contDentro" style="font-size:28px;font-weight:bold;color:var(--green)">0</div></div>
+  <div class="card"><small>SAÍDAS</small><div id="contSaiu" style="font-size:28px;font-weight:bold;color:var(--muted)">0</div></div>
+  <div class="card"><small>TOTAL</small><div id="contTotal" style="font-size:28px;font-weight:bold;color:var(--accent)">0</div></div>
+</div>
+
+<!-- TABS DINÂMICAS -->
+
+<div class="tabs-wrap" id="tabsContainer"></div>
+
+<!-- CONTEÚDO DAS ABAS -->
+
+<div id="abaConteudo"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAs_46w5fHouaTWPRb-NDWE8LvsbsQTZz4",
+  authDomain: "controle-portaria-520e7.firebaseapp.com",
+  projectId: "controle-portaria-520e7",
+  storageBucket: "controle-portaria-520e7.firebasestorage.app",
+  messagingSenderId: "405546210344",
+  appId: "1:405546210344:web:d2ff4bb16b1f63d7fb911d"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const hoje = new Date().toISOString().split('T')[0];
+
+// Estado global
+let abaAtiva = "hoje";
+let registrosHoje = [];
+let historicoCache = {}; // { "2026-04-16": [...] }
+let datasHistorico = []; // datas distintas diferentes de hoje
+let unsubHoje;
+
+// ===== HISTÓRICO FIXO 16/04 =====
+const historico1604 = [
+  {hora:"07:00",placa:"SFH6D12",ocupantes:1,nome:"ADILSON",empresa:"TR LIGEIRINHO",porteiro:"DANIEL PRATES",saida:"09:27"},
+  {hora:"07:05",placa:"ADUOF92",ocupantes:1,nome:"CARLOS SOCRATES",empresa:"CS TOPOGRAFIA",porteiro:"DANIEL PRATES",saida:"17:58"},
+  {hora:"07:13",placa:"IMT8B30",ocupantes:48,nome:"DANIEL",empresa:"BUCAGRANS",porteiro:"DANIEL PRATES",saida:"08:21"},
+  {hora:"07:13",placa:"IIW7I56",ocupantes:1,nome:"GILBERTO",empresa:"BUCAGRANS",porteiro:"DANIEL PRATES",saida:"18:16"},
+  {hora:"07:15",placa:"BDF3F05",ocupantes:3,nome:"CLODOALDO/DHEIZOM/CARLOS",empresa:"BUCAGRANS",porteiro:"DANIEL PRATES",saida:"13:53"},
+  {hora:"07:16",placa:"MLL2G80",ocupantes:1,nome:"VALDIR",empresa:"BUCAGRANS",porteiro:"DANIEL PRATES",saida:"10:22"},
+  {hora:"07:19",placa:"SER6B19",ocupantes:2,nome:"DOUGLAS/EQUIEL",empresa:"BUCAGRANS",porteiro:"DANIEL PRATES",saida:"12:56"},
+  {hora:"07:39",placa:"JBM7C33",ocupantes:2,nome:"ENG. SIDNEI/OSMAR",empresa:"BUCAGRANS",porteiro:"DANIEL PRATES",saida:"18:12"},
+  {hora:"08:10",placa:"RFP3I13",ocupantes:1,nome:"THIAGO",empresa:"NVP TERRAPLANAGEM",porteiro:"DANIEL PRATES",saida:""},
+  {hora:"08:14",placa:"JCP9C87",ocupantes:1,nome:"ENG. MARCELO",empresa:"BUCAGRANS",porteiro:"DANIEL PRATES",saida:"18:16"},
+  {hora:"08:17",placa:"MKH-6866",ocupantes:1,nome:"VALMIR",empresa:"PS PEREIRA",porteiro:"DANIEL PRATES",saida:"18:03"},
+  {hora:"08:34",placa:"QJP-8869",ocupantes:1,nome:"DIOGO",empresa:"TREMEIA",porteiro:"DANIEL PRATES",saida:"18:12"},
+  {hora:"08:41",placa:"JBG9780",ocupantes:2,nome:"CAIRO/JENILSON",empresa:"BRUM BALANÇAS",porteiro:"DANIEL PRATES",saida:"17:02"},
+  {hora:"08:49",placa:"MBB2G69",ocupantes:3,nome:"TRAJANO/VINICÍUS/KAUÃ",empresa:"-",porteiro:"DANIEL PRATES",saida:"11:50"},
+  {hora:"08:53",placa:"TXH6A32",ocupantes:1,nome:"KAMILY",empresa:"ESTELAR",porteiro:"DANIEL PRATES",saida:""},
+  {hora:"09:34",placa:"AYG5710",ocupantes:1,nome:"VINICIUS",empresa:"NAS",porteiro:"DANIEL PRATES",saida:"09:59"},
+  {hora:"11:23",placa:"MBV-6049",ocupantes:1,nome:"RUBINHO",empresa:"DUDU BEBIDAS",porteiro:"DANIEL PRATES",saida:"12:30"},
+  {hora:"11:47",placa:"JBQ7H55",ocupantes:1,nome:"PAULO",empresa:"BONY TRANSPORT.",porteiro:"DANIEL PRATES",saida:"14:22"},
+  {hora:"12:00",placa:"RXT5E41",ocupantes:2,nome:"AMILTON/CATARINA",empresa:"-",porteiro:"DANIEL PRATES",saida:""},
+  {hora:"14:05",placa:"ISS5D81",ocupantes:3,nome:"DIEGO/EDUARDO",empresa:"DINNA",porteiro:"DANIEL PRATES",saida:""},
+  {hora:"14:05",placa:"JBS2A48",ocupantes:2,nome:"ANDREY/ROBERTO",empresa:"VIGILANCIA NUNES",porteiro:"DANIEL PRATES",saida:""},
+  {hora:"14:34",placa:"RYK1J61",ocupantes:1,nome:"HENRIQUE",empresa:"VIGA FORTE",porteiro:"DANIEL PRATES",saida:"15:07"},
+  {hora:"15:15",placa:"JBM7C33",ocupantes:1,nome:"DHEIZOM",empresa:"BUCAGRANS",porteiro:"DANIEL PRATES",saida:"18:08"},
+  {hora:"16:30",placa:"SER6B19",ocupantes:2,nome:"DOUGLAS/EQUIEL",empresa:"BUCAGRANS",porteiro:"DANIEL PRATES",saida:"17:29"},
+  {hora:"17:39",placa:"IMT8B30",ocupantes:1,nome:"DANIEL",empresa:"BUCAGRANS",porteiro:"DANIEL PRATES",saida:"18:16"},
+];
+historicoCache["2026-04-16"] = historico1604;
+
+// ===== FIREBASE STATUS =====
+function setFbStatus(ok){
+  document.getElementById("fbDot").style.background = ok ? "#22c55e" : "#ef4444";
+  document.getElementById("fbTxt").textContent = ok ? "Firebase OK" : "Sem conexão";
+  document.getElementById("fbStatus").style.color = ok ? "#15803d" : "#b91c1c";
+  document.getElementById("fbStatus").style.background = ok ? "#f0fdf4" : "#fef2f2";
+  document.getElementById("fbStatus").style.borderColor = ok ? "#86efac" : "#fca5a5";
+}
+
+// ===== TEMPO =====
+function calcTempo(e, s){
+  if(!e) return "-";
+  const [h1,m1] = e.split(":").map(Number);
+  let h2, m2;
+  if(s && s.includes(":")){
+    [h2,m2] = s.split(":").map(Number);
+  } else {
+    const now = new Date();
+    h2 = now.getHours(); m2 = now.getMinutes();
+  }
+  const min = (h2*60+m2)-(h1*60+m1);
+  return min < 0 ? "-" : Math.floor(min/60)+"h "+(min%60)+"m";
+}
+
+// ===== FORMATAR DATA =====
+function fmtData(d){
+  // "2026-04-21" -> "21/04/26"
+  const [y,m,dd] = d.split("-");
+  return `${dd}/${m}/${y.slice(2)}`;
+}
+
+// ===== RENDER TABS =====
+function renderTabs(){
+  const container = document.getElementById("tabsContainer");
+  let html = `<button class="tab ${abaAtiva==='hoje'?'ativo':''}" onclick="setAba('hoje')">📋 HOJE</button>`;
+
+  // Ordenar datas do mais recente pro mais antigo, excluindo hoje
+  const datas = [...new Set([...datasHistorico, ...Object.keys(historicoCache)])]
+    .filter(d => d !== hoje)
+    .sort((a,b) => b.localeCompare(a));
+
+  datas.forEach(d => {
+    html += `<button class="tab ${abaAtiva===d?'ativo':''}" onclick="setAba('${d}')">📅 ${fmtData(d)}</button>`;
+  });
+
+  container.innerHTML = html;
+}
+
+// ===== SET ABA =====
+window.setAba = function(aba){
+  abaAtiva = aba;
+  renderTabs();
+  if(aba === "hoje"){
+    renderHoje();
+  } else {
+    renderHistorico(aba);
+  }
+};
+
+// ===== BUSCAR TODAS AS DATAS DO FIRESTORE =====
+async function carregarDatasHistorico(){
+  try {
+    const snap = await getDocs(collection(db,"portaria"));
+    const datas = new Set();
+    snap.forEach(d => {
+      const data = d.data().data;
+      if(data && data !== hoje) datas.add(data);
+    });
+
+    // Para cada data nova, cachear os registros
+    for(const data of datas){
+      if(!historicoCache[data]){
+        const registros = [];
+        snap.forEach(d => {
+          if(d.data().data === data) registros.push({id:d.id,...d.data()});
+        });
+        registros.sort((a,b)=> a.hora.localeCompare(b.hora));
+        historicoCache[data] = registros;
+      }
+      datasHistorico.push(data);
+    }
+
+    renderTabs();
+    setFbStatus(true);
+  } catch(e){
+    setFbStatus(false);
+  }
+}
+
+// ===== OUVIR HOJE EM TEMPO REAL =====
+function ouvirHoje(){
+  if(unsubHoje) unsubHoje();
+  const q = query(collection(db,"portaria"), orderBy("ts","asc"));
+  unsubHoje = onSnapshot(q, snap => {
+    registrosHoje = [];
+    const novasDatas = new Set(datasHistorico);
+
+    snap.forEach(d => {
+      const reg = {id:d.id,...d.data()};
+      if(reg.data === hoje){
+        registrosHoje.push(reg);
+      } else if(reg.data && reg.data !== hoje){
+        // Adiciona ao cache de histórico em tempo real
+        novasDatas.add(reg.data);
+        if(!historicoCache[reg.data]) historicoCache[reg.data] = [];
+        const idx = historicoCache[reg.data].findIndex(r=>r.id===reg.id);
+        if(idx === -1) historicoCache[reg.data].push(reg);
+        else historicoCache[reg.data][idx] = reg;
+      }
+    });
+
+    datasHistorico = [...novasDatas].filter(d=>d!==hoje);
+    renderTabs();
+
+    if(abaAtiva === "hoje") renderHoje();
+    setFbStatus(true);
+  }, err => {
+    setFbStatus(false);
+  });
+}
+
+// ===== RENDER HOJE =====
+function renderHoje(){
+  const busca = (document.getElementById("busca")||{value:""}).value.toLowerCase();
+
+  let html = `
+    <div style="background:#fff;border-radius:8px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;border:1px solid #e2e8f0;">
+      <label style="font-weight:bold;font-size:13px;color:#334155;white-space:nowrap;">👷 Porteiro do dia:</label>
+      <input type="text" id="porteiro" placeholder="Nome do porteiro..." style="flex:1;background:#f8fafc;border:1px solid #cbd5e1;color:#0f172a;padding:8px 12px;border-radius:6px;font-size:14px;font-weight:bold;" value="${porteiroAtual}">
+    </div>
+    <div class="form-area">
+      <input type="time" id="hora" value="${new Date().toTimeString().slice(0,5)}">
+      <input type="text" id="placa" placeholder="PLACA">
+      <input type="text" id="nome" placeholder="NOME">
+      <input type="text" id="empresa" placeholder="EMPRESA">
+      <input type="number" id="ocupantes" value="1" style="width:100%">
+      <button onclick="add()">REGISTRAR</button>
+    </div>
+    <div class="busca-wrap">
+      <input type="text" id="busca" placeholder="🔍 Buscar placa ou nome..." oninput="renderHoje()" value="${busca}">
+    </div>
+    <table>
+      <thead><tr>
+        <th>Status</th><th>Entrada</th><th>Placa</th><th>Nome</th><th>Empresa</th><th>Tempo</th><th>Saída</th>
+      </tr></thead>
+      <tbody>`;
+
+  let d=0, s=0;
+  registrosHoje.filter(r =>
+    r.placa.toLowerCase().includes(busca) || r.nome.toLowerCase().includes(busca)
+  ).sort((a,b)=>b.ts-a.ts).forEach(r => {
+    if(r.saida) s++; else d++;
+    html += `<tr>
+      <td><span class="badge ${r.saida?'saiu':'dentro'}">${r.saida?'SAIU':'PÁTIO'}</span></td>
+      <td>${r.hora}</td>
+      <td><b>${r.placa}</b></td>
+      <td>${r.nome}</td>
+      <td style="color:var(--muted);font-size:12px">${r.empresa||""}</td>
+      <td>${calcTempo(r.hora,r.saida)}</td>
+      <td>${!r.saida?`
+        <input type="time" id="saida-${r.id}" style="width:90px">
+        <button class="btn-saida" onclick="confirmarSaida('${r.id}')">OK</button>
+      `:r.saida}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table>`;
+
+  document.getElementById("abaConteudo").innerHTML = html;
+  document.getElementById("contDentro").innerText = d;
+  document.getElementById("contSaiu").innerText = s;
+  document.getElementById("contTotal").innerText = registrosHoje.length;
+
+  // Salvar porteiro ao digitar
+  document.getElementById("porteiro").addEventListener("input", e => {
+    porteiroAtual = e.target.value;
+  });
+}
+
+// ===== RENDER HISTÓRICO =====
+function renderHistorico(data){
+  const registros = historicoCache[data] || [];
+  const porteiroDia = registros.find(r=>r.porteiro)?.porteiro || "—";
+  const busca = "";
+
+  let html = `
+    <div class="secao-titulo">
+      📅 ${fmtData(data)} — PORTEIRO: ${porteiroDia} &nbsp;|&nbsp; OBRA: PCH LEBON REGIS
+    </div>
+    <div class="busca-wrap">
+      <input type="text" id="buscaHist" placeholder="🔍 Buscar no histórico..." oninput="filtrarHist('${data}')" style="width:100%">
+    </div>
+    <table>
+      <thead><tr>
+        <th>Entrada</th><th>Placa</th><th>Ocup.</th><th>Nome(s)</th><th>Empresa</th><th>Saída</th><th>Tempo</th>
+      </tr></thead>
+      <tbody id="corpoHist">`;
+
+  let totalOcup=0, comSaida=0;
+  registros.sort((a,b)=>a.hora.localeCompare(b.hora)).forEach(r => {
+    totalOcup += Number(r.ocupantes||0);
+    if(r.saida) comSaida++;
+    html += `<tr>
+      <td>${r.hora}</td>
+      <td><b>${r.placa}</b></td>
+      <td style="text-align:center">${r.ocupantes}</td>
+      <td>${r.nome}</td>
+      <td style="color:var(--muted);font-size:12px">${r.empresa||""}</td>
+      <td>${r.saida||'<span style="color:var(--muted)">—</span>'}</td>
+      <td style="color:var(--muted);font-size:12px">${calcTempo(r.hora,r.saida)}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table>
+    <div class="resumo-dia">
+      <b>Resumo:</b> &nbsp;
+      <b style="color:var(--accent)">${registros.length}</b> veículos &nbsp;|&nbsp;
+      <b style="color:var(--green)">${comSaida}</b> saíram &nbsp;|&nbsp;
+      <b style="color:#e74c3c">${registros.length-comSaida}</b> sem saída &nbsp;|&nbsp;
+      <b style="color:var(--blue)">${totalOcup}</b> ocupantes
+    </div>`;
+
+  document.getElementById("abaConteudo").innerHTML = html;
+  document.getElementById("contDentro").innerText = registros.filter(r=>!r.saida).length;
+  document.getElementById("contSaiu").innerText = comSaida;
+  document.getElementById("contTotal").innerText = registros.length;
+}
+
+// ===== FILTRAR HISTÓRICO =====
+window.filtrarHist = function(data){
+  const busca = document.getElementById("buscaHist").value.toLowerCase();
+  const registros = (historicoCache[data]||[]).filter(r=>
+    r.placa.toLowerCase().includes(busca)||
+    r.nome.toLowerCase().includes(busca)||
+    (r.empresa||"").toLowerCase().includes(busca)
+  );
+  let html="";
+  registros.forEach(r=>{
+    html+=`<tr>
+      <td>${r.hora}</td>
+      <td><b>${r.placa}</b></td>
+      <td style="text-align:center">${r.ocupantes}</td>
+      <td>${r.nome}</td>
+      <td style="color:var(--muted);font-size:12px">${r.empresa||""}</td>
+      <td>${r.saida||'<span style="color:var(--muted)">—</span>'}</td>
+      <td style="color:var(--muted);font-size:12px">${calcTempo(r.hora,r.saida)}</td>
+    </tr>`;
+  });
+  document.getElementById("corpoHist").innerHTML = html;
+};
+
+// ===== ADD REGISTRO =====
+let porteiroAtual = "";
+
+window.add = async function(){
+  const h = document.getElementById("hora").value;
+  const p = document.getElementById("placa").value.toUpperCase().trim();
+  const n = document.getElementById("nome").value.trim();
+  porteiroAtual = (document.getElementById("porteiro").value||"").trim();
+
+  if(!h||!p||!n){ alert("Preencha hora, placa e nome!"); return; }
+
+  if(registrosHoje.find(r=>r.placa===p && !r.saida)){
+    alert("Veículo já está no pátio!"); return;
+  }
+
+  await addDoc(collection(db,"portaria"),{
+    data: hoje,
+    hora: h,
+    placa: p,
+    nome: n,
+    empresa: (document.getElementById("empresa").value||"").trim(),
+    ocupantes: Number(document.getElementById("ocupantes").value)||1,
+    porteiro: porteiroAtual||"—",
+    saida: "",
+    ts: Date.now()
+  });
+
+  document.getElementById("placa").value="";
+  document.getElementById("nome").value="";
+  document.getElementById("empresa").value="";
+  document.getElementById("ocupantes").value="1";
+  document.getElementById("hora").value = new Date().toTimeString().slice(0,5);
+};
+
+// ===== CONFIRMAR SAÍDA =====
+window.confirmarSaida = async function(id){
+  const hora = document.getElementById("saida-"+id).value;
+  if(!hora){ alert("Informe a hora de saída"); return; }
+  await updateDoc(doc(db,"portaria",id),{saida:hora});
+};
+
+// ===== EXPORTAR =====
+window.exportar = function(){
+  const lista = abaAtiva==="hoje" ? registrosHoje : (historicoCache[abaAtiva]||[]);
+  let csv="Data;Placa;Nome;Empresa;Porteiro;Entrada;Saida\n";
+  lista.forEach(r=>{
+    csv+=`${r.data};${r.placa};${r.nome};${r.empresa||""};${r.porteiro||""};${r.hora};${r.saida||""}\n`;
+  });
+  const blob=new Blob(["\ufeff"+csv]);
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`portaria-${abaAtiva}.csv`;
+  a.click();
+};
+
+// ===== INIT =====
+renderTabs();
+renderHoje();
+carregarDatasHistorico();
+ouvirHoje();
+
+</script>
+
+</body>
+</html>
