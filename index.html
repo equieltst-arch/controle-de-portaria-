@@ -49,7 +49,7 @@ text-align:center;
 }
 
 .form-area{
-background:var(–surface);
+background:#161b22;
 padding:20px;
 border-radius:var(–radius);
 margin-bottom:20px;
@@ -63,7 +63,7 @@ background:var(–surface2);
 border:1px solid var(–border);
 padding:10px;
 border-radius:6px;
-color:#000000;
+color:#fff;
 width:100%;
 }
 button{
@@ -391,9 +391,10 @@ function renderHoje(){
   document.getElementById("contSaiu").innerText = s;
   document.getElementById("contTotal").innerText = registrosHoje.length;
 
-  // Salvar porteiro ao digitar
+  // Salvar porteiro no localStorage ao digitar
   document.getElementById("porteiro").addEventListener("input", e => {
     porteiroAtual = e.target.value;
+    localStorage.setItem("porteiro_dia", porteiroAtual);
   });
 }
 
@@ -470,7 +471,7 @@ window.filtrarHist = function(data){
 };
 
 // ===== ADD REGISTRO =====
-let porteiroAtual = "";
+let porteiroAtual = localStorage.getItem("porteiro_dia") || "";
 
 window.add = async function(){
   const h = document.getElementById("hora").value;
