@@ -17,10 +17,19 @@
   --text:#e6edf3;
   --muted:#8b949e;
   --radius:10px;
+  font-size:15px;
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}
-body{background:var(--bg);color:var(--text);padding:20px}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  padding:20px;
+  font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:15px;
+  line-height:1.5;
+}
 
+/* ── HEADER ── */
 header{
 background:#ffffff;
 padding:15px;
@@ -31,9 +40,12 @@ align-items:center;
 border-radius:10px 10px 0 0;
 flex-wrap:wrap;
 gap:10px;
-color:#000;
+color:#111;
 }
+header h2{color:#111;font-size:18px;}
+header small{color:#333;}
 
+/* ── STATS ── */
 .stats{
 display:grid;
 grid-template-columns:repeat(3,1fr);
@@ -47,7 +59,16 @@ border-radius:var(–radius);
 border:1px solid var(–border);
 text-align:center;
 }
+.card small{
+display:block;
+color:var(–muted);
+font-size:12px;
+font-weight:600;
+letter-spacing:.05em;
+margin-bottom:4px;
+}
 
+/* ── FORM ── */
 .form-area{
 background:#161b22;
 padding:20px;
@@ -58,25 +79,74 @@ grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
 gap:10px;
 }
 
-input{
+/* ── INPUTS GLOBAL ── */
+input, select, textarea {
 background:var(–surface2);
 border:1px solid var(–border);
-padding:10px;
+padding:10px 12px;
 border-radius:6px;
-color:#0c0808;
+color:#e6edf3;           /* texto claro bem visível */
+font-size:14px;
+font-family:inherit;
 width:100%;
 }
+input::placeholder{
+color:#6e7681;           /* placeholder cinza médio */
+}
+input:focus{
+outline:none;
+border-color:var(–accent);
+background:#21262d;
+}
+/* input de saída nos campos de horário */
+input[type=“time”]{
+color:#e6edf3;
+background:var(–surface2);
+}
+
+/* ── BOTÕES ── */
 button{
 background:var(–accent);
 color:#000;
 border:none;
-padding:10px;
+padding:10px 14px;
 border-radius:6px;
-font-weight:bold;
+font-weight:700;
+font-size:14px;
 cursor:pointer;
+font-family:inherit;
+transition:opacity .15s;
 }
+button:hover{opacity:.88;}
 
-/* TABS */
+/* ── PORTEIRO BAR ── */
+.porteiro-bar{
+background:var(–surface2);
+border-radius:8px;
+padding:12px 16px;
+margin-bottom:12px;
+display:flex;
+align-items:center;
+gap:12px;
+border:1px solid var(–border);
+}
+.porteiro-bar label{
+font-weight:700;
+font-size:13px;
+color:var(–accent);
+white-space:nowrap;
+}
+.porteiro-bar input{
+flex:1;
+background:var(–surface);
+border:1px solid var(–border);
+color:#e6edf3;
+font-size:14px;
+font-weight:600;
+}
+.porteiro-bar input::placeholder{color:#6e7681;}
+
+/* ── TABS ── */
 .tabs-wrap{
 display:flex;
 gap:8px;
@@ -87,48 +157,128 @@ align-items:center;
 .tab{
 background:var(–surface);
 border:1px solid var(–border);
-color:var(–muted);
+color:#c9d1d9;           /* texto claro */
 padding:8px 16px;
 border-radius:6px;
 cursor:pointer;
-font-weight:bold;
+font-weight:700;
 font-size:13px;
 white-space:nowrap;
+transition:background .15s;
 }
+.tab:hover{background:var(–surface2);}
 .tab.ativo{
 background:var(–accent);
 color:#000;
 border-color:var(–accent);
 }
 
-table{width:100%;border-collapse:collapse}
-th{padding:12px;border-bottom:2px solid var(–accent);text-align:left;color:var(–muted);font-size:12px;text-transform:uppercase;}
-td{padding:10px 12px;border-bottom:1px solid var(–border)}
+/* ── ABRE DATA ── */
+.abre-data-wrap{
+display:flex;
+align-items:center;
+gap:6px;
+background:var(–surface2);
+border:1px solid var(–border);
+border-radius:6px;
+padding:6px 10px;
+cursor:pointer;
+}
+.abre-data-wrap label{
+color:#c9d1d9;
+font-size:13px;
+font-weight:700;
+cursor:pointer;
+white-space:nowrap;
+}
+.abre-data-wrap input[type=“date”]{
+background:transparent;
+border:none;
+color:#e6edf3;
+font-size:13px;
+font-weight:700;
+font-family:inherit;
+cursor:pointer;
+padding:0;
+width:auto;
+color-scheme: dark;
+}
 
-.badge{padding:4px 8px;border-radius:4px;font-size:11px;font-weight:bold}
-.dentro{background:#3fb95022;color:var(–green)}
-.saiu{background:#30363d;color:var(–muted)}
+/* ── TABELA ── */
+table{width:100%;border-collapse:collapse;}
+th{
+padding:12px;
+border-bottom:2px solid var(–accent);
+text-align:left;
+color:#8b949e;
+font-size:12px;
+font-weight:700;
+text-transform:uppercase;
+letter-spacing:.05em;
+}
+td{
+padding:10px 12px;
+border-bottom:1px solid var(–border);
+color:#e6edf3;           /* texto das células bem visível */
+font-size:14px;
+}
+tr:hover td{background:#1c2330;}
 
-.btn-saida{background:var(–blue);color:#f3ebeb;padding:5px 10px;font-size:12px;border:none;border-radius:4px;cursor:pointer;}
+/* ── BADGES ── */
+.badge{padding:4px 8px;border-radius:4px;font-size:11px;font-weight:700;}
+.dentro{background:#3fb95022;color:#3fb950;}
+.saiu{background:#30363d;color:#8b949e;}
 
+/* ── BOTÃO SAÍDA ── */
+.btn-saida{
+background:var(–blue);
+color:#fff;
+padding:5px 10px;
+font-size:12px;
+font-weight:700;
+border:none;
+border-radius:4px;
+cursor:pointer;
+}
+.btn-saida:hover{opacity:.85;}
+
+/* ── BUSCA ── */
 .busca-wrap{margin-bottom:15px;}
 
+/* ── SEÇÃO TÍTULO ── */
 .secao-titulo{
 background:var(–surface2);
 border-left:3px solid var(–accent);
 padding:10px 15px;
 margin:10px 0 15px 0;
-font-weight:bold;
+font-weight:700;
 font-size:13px;
 color:var(–accent);
 }
+
+/* ── RESUMO DIA ── */
 .resumo-dia{
 margin-top:15px;
-padding:12px;
+padding:12px 16px;
 background:var(–surface);
 border-radius:var(–radius);
 border:1px solid var(–border);
 font-size:13px;
+color:#c9d1d9;
+}
+
+/* ── STATUS FIREBASE ── */
+#fbStatus{
+display:inline-flex;
+align-items:center;
+gap:6px;
+background:#f1f5f9;
+border:1px solid #cbd5e1;
+border-radius:20px;
+padding:5px 12px;
+font-size:12px;
+font-weight:700;
+color:#64748b;
 }
 </style>
 
@@ -138,10 +288,10 @@ font-size:13px;
 <header>
   <div style="display:flex;align-items:center;gap:12px">
     <img src="logo-pch.png" alt="Logo PCH" style="height:48px;object-fit:contain">
-    <h2 style="color:#000">🚧 BUCAGRANS Portaria</h2>
+    <h2>🚧 BUCAGRANS Portaria</h2>
   </div>
   <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-    <span id="fbStatus" style="display:inline-flex;align-items:center;gap:6px;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:bold;color:#64748b;">
+    <span id="fbStatus">
       <span id="fbDot" style="width:8px;height:8px;border-radius:50%;background:#94a3b8;display:inline-block;"></span>
       <span id="fbTxt">Conectando...</span>
     </span>
@@ -155,12 +305,7 @@ font-size:13px;
   <div class="card"><small>TOTAL</small><div id="contTotal" style="font-size:28px;font-weight:bold;color:var(--accent)">0</div></div>
 </div>
 
-<!-- TABS DINÂMICAS -->
-
 <div class="tabs-wrap" id="tabsContainer"></div>
-
-<!-- CONTEÚDO DAS ABAS -->
-
 <div id="abaConteudo"></div>
 
 <script type="module">
@@ -181,12 +326,12 @@ const db = getFirestore(app);
 
 const hoje = new Date().toISOString().split('T')[0];
 
-// Estado global
 let abaAtiva = "hoje";
 let registrosHoje = [];
-let historicoCache = {}; // { "2026-04-16": [...] }
-let datasHistorico = []; // datas distintas diferentes de hoje
+let historicoCache = {};
+let datasHistorico = [];
 let unsubHoje;
+let porteiroAtual = localStorage.getItem("porteiro_dia") || "";
 
 // ===== HISTÓRICO FIXO 16/04 =====
 const historico1604 = [
@@ -244,7 +389,6 @@ function calcTempo(e, s){
 
 // ===== FORMATAR DATA =====
 function fmtData(d){
-  // "2026-04-21" -> "21/04/26"
   const [y,m,dd] = d.split("-");
   return `${dd}/${m}/${y.slice(2)}`;
 }
@@ -253,15 +397,20 @@ function fmtData(d){
 function renderTabs(){
   const container = document.getElementById("tabsContainer");
   let html = `<button class="tab ${abaAtiva==='hoje'?'ativo':''}" onclick="setAba('hoje')">📋 HOJE</button>`;
-
-  // Ordenar datas do mais recente pro mais antigo, excluindo hoje
   const datas = [...new Set([...datasHistorico, ...Object.keys(historicoCache)])]
     .filter(d => d !== hoje)
     .sort((a,b) => b.localeCompare(a));
-
   datas.forEach(d => {
     html += `<button class="tab ${abaAtiva===d?'ativo':''}" onclick="setAba('${d}')">📅 ${fmtData(d)}</button>`;
   });
+
+  // Botão abrir data manual
+  const maxData = hoje; // não permite datas futuras
+  html += `
+    <div class="abre-data-wrap" title="Abrir data específica">
+      <label for="inputDataManual">📆 Ir para:</label>
+      <input type="date" id="inputDataManual" max="${maxData}" onchange="abrirDataManual(this.value)">
+    </div>`;
 
   container.innerHTML = html;
 }
@@ -270,14 +419,63 @@ function renderTabs(){
 window.setAba = function(aba){
   abaAtiva = aba;
   renderTabs();
-  if(aba === "hoje"){
-    renderHoje();
-  } else {
-    renderHistorico(aba);
-  }
+  if(aba === "hoje") renderHoje();
+  else renderHistorico(aba);
 };
 
-// ===== BUSCAR TODAS AS DATAS DO FIRESTORE =====
+// ===== ABRIR DATA MANUAL =====
+window.abrirDataManual = function(data){
+  if(!data) return;
+  if(data === hoje){ setAba("hoje"); return; }
+  // Garante que o cache existe (mesmo vazio) para a data
+  if(!historicoCache[data]) historicoCache[data] = [];
+  // Adiciona à lista se não estiver
+  if(!datasHistorico.includes(data)) datasHistorico.push(data);
+  setAba(data);
+};
+
+
+// ===== ADD RETROATIVO =====
+window.addRetroativo = async function(data){
+  const h   = document.getElementById("histHora").value;
+  const p   = document.getElementById("histPlaca").value.toUpperCase().trim();
+  const n   = document.getElementById("histNome").value.trim();
+  const emp = (document.getElementById("histEmpresa").value||"").trim();
+  const ocu = Number(document.getElementById("histOcupantes").value)||1;
+  const sai = document.getElementById("histSaida").value||"";
+  const por = (document.getElementById("histPorteiro").value||"").trim();
+
+  if(!h||!p||!n){ alert("Preencha hora, placa e nome!"); return; }
+
+  await addDoc(collection(db,"portaria"),{
+    data,
+    hora: h,
+    placa: p,
+    nome: n,
+    empresa: emp,
+    ocupantes: ocu,
+    porteiro: por||"—",
+    saida: sai,
+    ts: new Date(data+"T"+h+":00").getTime()
+  });
+
+  // Atualizar cache local
+  if(!historicoCache[data]) historicoCache[data] = [];
+  historicoCache[data].push({data,hora:h,placa:p,nome:n,empresa:emp,ocupantes:ocu,porteiro:por||"—",saida:sai});
+  historicoCache[data].sort((a,b)=>a.hora.localeCompare(b.hora));
+
+  // Limpar campos
+  document.getElementById("histPlaca").value="";
+  document.getElementById("histNome").value="";
+  document.getElementById("histEmpresa").value="";
+  document.getElementById("histOcupantes").value="1";
+  document.getElementById("histSaida").value="";
+
+  renderHistorico(data);
+  // Reabre o formulário após render
+  setTimeout(()=>{ const det=document.getElementById("formRetroativo"); if(det) det.open=true; },50);
+};
+
 async function carregarDatasHistorico(){
   try {
     const snap = await getDocs(collection(db,"portaria"));
@@ -286,8 +484,6 @@ async function carregarDatasHistorico(){
       const data = d.data().data;
       if(data && data !== hoje) datas.add(data);
     });
-
-    // Para cada data nova, cachear os registros
     for(const data of datas){
       if(!historicoCache[data]){
         const registros = [];
@@ -299,7 +495,6 @@ async function carregarDatasHistorico(){
       }
       datasHistorico.push(data);
     }
-
     renderTabs();
     setFbStatus(true);
   } catch(e){
@@ -307,20 +502,18 @@ async function carregarDatasHistorico(){
   }
 }
 
-// ===== OUVIR HOJE EM TEMPO REAL =====
+// ===== OUVIR HOJE =====
 function ouvirHoje(){
   if(unsubHoje) unsubHoje();
   const q = query(collection(db,"portaria"), orderBy("ts","asc"));
   unsubHoje = onSnapshot(q, snap => {
     registrosHoje = [];
     const novasDatas = new Set(datasHistorico);
-
     snap.forEach(d => {
       const reg = {id:d.id,...d.data()};
       if(reg.data === hoje){
         registrosHoje.push(reg);
       } else if(reg.data && reg.data !== hoje){
-        // Adiciona ao cache de histórico em tempo real
         novasDatas.add(reg.data);
         if(!historicoCache[reg.data]) historicoCache[reg.data] = [];
         const idx = historicoCache[reg.data].findIndex(r=>r.id===reg.id);
@@ -328,15 +521,11 @@ function ouvirHoje(){
         else historicoCache[reg.data][idx] = reg;
       }
     });
-
     datasHistorico = [...novasDatas].filter(d=>d!==hoje);
     renderTabs();
-
     if(abaAtiva === "hoje") renderHoje();
     setFbStatus(true);
-  }, err => {
-    setFbStatus(false);
-  });
+  }, () => setFbStatus(false));
 }
 
 // ===== RENDER HOJE =====
@@ -344,16 +533,16 @@ function renderHoje(){
   const busca = (document.getElementById("busca")||{value:""}).value.toLowerCase();
 
   let html = `
-    <div style="background:#fff;border-radius:8px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;border:1px solid #e2e8f0;">
-      <label style="font-weight:bold;font-size:13px;color:#334155;white-space:nowrap;">👷 Porteiro do dia:</label>
-      <input type="text" id="porteiro" placeholder="Nome do porteiro..." style="flex:1;background:#f8fafc;border:1px solid #cbd5e1;color:#0f172a;padding:8px 12px;border-radius:6px;font-size:14px;font-weight:bold;" value="${porteiroAtual}">
+    <div class="porteiro-bar">
+      <label>👷 Porteiro do dia:</label>
+      <input type="text" id="porteiro" placeholder="Nome do porteiro..." value="${porteiroAtual}">
     </div>
     <div class="form-area">
       <input type="time" id="hora" value="${new Date().toTimeString().slice(0,5)}">
       <input type="text" id="placa" placeholder="PLACA">
       <input type="text" id="nome" placeholder="NOME">
       <input type="text" id="empresa" placeholder="EMPRESA">
-      <input type="number" id="ocupantes" value="1" style="width:100%">
+      <input type="number" id="ocupantes" value="1">
       <button onclick="add()">REGISTRAR</button>
     </div>
     <div class="busca-wrap">
@@ -366,32 +555,31 @@ function renderHoje(){
       <tbody>`;
 
   let d=0, s=0;
-  registrosHoje.filter(r =>
-    r.placa.toLowerCase().includes(busca) || r.nome.toLowerCase().includes(busca)
-  ).sort((a,b)=>b.ts-a.ts).forEach(r => {
-    if(r.saida) s++; else d++;
-    html += `<tr>
-      <td><span class="badge ${r.saida?'saiu':'dentro'}">${r.saida?'SAIU':'PÁTIO'}</span></td>
-      <td>${r.hora}</td>
-      <td><b>${r.placa}</b></td>
-      <td>${r.nome}</td>
-      <td style="color:var(--muted);font-size:12px">${r.empresa||""}</td>
-      <td>${calcTempo(r.hora,r.saida)}</td>
-      <td>${!r.saida?`
-        <input type="time" id="saida-${r.id}" style="width:90px">
-        <button class="btn-saida" onclick="confirmarSaida('${r.id}')">OK</button>
-      `:r.saida}</td>
-    </tr>`;
-  });
+  registrosHoje
+    .filter(r => r.placa.toLowerCase().includes(busca) || r.nome.toLowerCase().includes(busca))
+    .sort((a,b) => b.ts - a.ts)
+    .forEach(r => {
+      if(r.saida) s++; else d++;
+      html += `<tr>
+        <td><span class="badge ${r.saida?'saiu':'dentro'}">${r.saida?'SAIU':'PÁTIO'}</span></td>
+        <td>${r.hora}</td>
+        <td><b>${r.placa}</b></td>
+        <td>${r.nome}</td>
+        <td style="color:var(--muted);font-size:13px">${r.empresa||""}</td>
+        <td style="color:var(--muted);font-size:13px">${calcTempo(r.hora,r.saida)}</td>
+        <td>${!r.saida
+          ? `<input type="time" id="saida-${r.id}" style="width:90px"><button class="btn-saida" onclick="confirmarSaida('${r.id}')">OK</button>`
+          : `<span style="color:#8b949e">${r.saida}</span>`
+        }</td>
+      </tr>`;
+    });
 
   html += `</tbody></table>`;
-
   document.getElementById("abaConteudo").innerHTML = html;
   document.getElementById("contDentro").innerText = d;
   document.getElementById("contSaiu").innerText = s;
   document.getElementById("contTotal").innerText = registrosHoje.length;
 
-  // Salvar porteiro no localStorage ao digitar
   document.getElementById("porteiro").addEventListener("input", e => {
     porteiroAtual = e.target.value;
     localStorage.setItem("porteiro_dia", porteiroAtual);
@@ -401,13 +589,46 @@ function renderHoje(){
 // ===== RENDER HISTÓRICO =====
 function renderHistorico(data){
   const registros = historicoCache[data] || [];
-  const porteiroDia = registros.find(r=>r.porteiro)?.porteiro || "—";
-  const busca = "";
+  const porteiroDia = registros.find(r=>r.porteiro)?.porteiro || "";
 
   let html = `
     <div class="secao-titulo">
-      📅 ${fmtData(data)} — PORTEIRO: ${porteiroDia} &nbsp;|&nbsp; OBRA: PCH LEBON REGIS
+      📅 ${fmtData(data)} — PORTEIRO: ${porteiroDia||"—"} &nbsp;|&nbsp; OBRA: PCH LEBON REGIS
     </div>
+
+    <!-- FORMULÁRIO RETROATIVO -->
+    <details id="formRetroativo" style="margin-bottom:14px;">
+      <summary style="
+        background:var(--surface2);
+        border:1px solid var(--border);
+        border-radius:6px;
+        padding:10px 14px;
+        cursor:pointer;
+        font-weight:700;
+        font-size:13px;
+        color:var(--accent);
+        list-style:none;
+        display:flex;
+        align-items:center;
+        gap:8px;
+      ">➕ Adicionar registro nesta data</summary>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:14px;">
+        <div class="porteiro-bar" style="margin-bottom:10px;">
+          <label>👷 Porteiro:</label>
+          <input type="text" id="histPorteiro" placeholder="Nome do porteiro..." value="${porteiroDia}">
+        </div>
+        <div class="form-area" style="margin-bottom:0;">
+          <input type="time" id="histHora" value="07:00">
+          <input type="text" id="histPlaca" placeholder="PLACA">
+          <input type="text" id="histNome" placeholder="NOME">
+          <input type="text" id="histEmpresa" placeholder="EMPRESA">
+          <input type="number" id="histOcupantes" value="1" min="1">
+          <input type="time" id="histSaida" placeholder="Saída (opcional)">
+          <button onclick="addRetroativo('${data}')">SALVAR</button>
+        </div>
+      </div>
+    </details>
+
     <div class="busca-wrap">
       <input type="text" id="buscaHist" placeholder="🔍 Buscar no histórico..." oninput="filtrarHist('${data}')" style="width:100%">
     </div>
@@ -418,6 +639,13 @@ function renderHistorico(data){
       <tbody id="corpoHist">`;
 
   let totalOcup=0, comSaida=0;
+
+  if(registros.length === 0){
+    html += `<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">
+      Nenhum registro para esta data.<br>
+      <small style="font-size:12px;">Use o formulário acima para adicionar registros retroativos.</small>
+    </td></tr>`;
+  }
   registros.sort((a,b)=>a.hora.localeCompare(b.hora)).forEach(r => {
     totalOcup += Number(r.ocupantes||0);
     if(r.saida) comSaida++;
@@ -426,9 +654,9 @@ function renderHistorico(data){
       <td><b>${r.placa}</b></td>
       <td style="text-align:center">${r.ocupantes}</td>
       <td>${r.nome}</td>
-      <td style="color:var(--muted);font-size:12px">${r.empresa||""}</td>
+      <td style="color:var(--muted);font-size:13px">${r.empresa||""}</td>
       <td>${r.saida||'<span style="color:var(--muted)">—</span>'}</td>
-      <td style="color:var(--muted);font-size:12px">${calcTempo(r.hora,r.saida)}</td>
+      <td style="color:var(--muted);font-size:13px">${calcTempo(r.hora,r.saida)}</td>
     </tr>`;
   });
 
@@ -462,17 +690,15 @@ window.filtrarHist = function(data){
       <td><b>${r.placa}</b></td>
       <td style="text-align:center">${r.ocupantes}</td>
       <td>${r.nome}</td>
-      <td style="color:var(--muted);font-size:12px">${r.empresa||""}</td>
+      <td style="color:var(--muted);font-size:13px">${r.empresa||""}</td>
       <td>${r.saida||'<span style="color:var(--muted)">—</span>'}</td>
-      <td style="color:var(--muted);font-size:12px">${calcTempo(r.hora,r.saida)}</td>
+      <td style="color:var(--muted);font-size:13px">${calcTempo(r.hora,r.saida)}</td>
     </tr>`;
   });
   document.getElementById("corpoHist").innerHTML = html;
 };
 
-// ===== ADD REGISTRO =====
-let porteiroAtual = localStorage.getItem("porteiro_dia") || "";
-
+// ===== ADD =====
 window.add = async function(){
   const h = document.getElementById("hora").value;
   const p = document.getElementById("placa").value.toUpperCase().trim();
@@ -480,7 +706,6 @@ window.add = async function(){
   porteiroAtual = (document.getElementById("porteiro").value||"").trim();
 
   if(!h||!p||!n){ alert("Preencha hora, placa e nome!"); return; }
-
   if(registrosHoje.find(r=>r.placa===p && !r.saida)){
     alert("Veículo já está no pátio!"); return;
   }
@@ -504,7 +729,7 @@ window.add = async function(){
   document.getElementById("hora").value = new Date().toTimeString().slice(0,5);
 };
 
-// ===== CONFIRMAR SAÍDA =====
+// ===== SAÍDA =====
 window.confirmarSaida = async function(id){
   const hora = document.getElementById("saida-"+id).value;
   if(!hora){ alert("Informe a hora de saída"); return; }
@@ -530,7 +755,6 @@ renderTabs();
 renderHoje();
 carregarDatasHistorico();
 ouvirHoje();
-
 </script>
 
 </body>
