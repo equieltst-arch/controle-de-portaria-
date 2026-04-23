@@ -18,6 +18,7 @@
   --muted:#8b949e;
   --radius:10px;
   font-size:15px;
+  color-scheme: dark;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{
@@ -435,19 +436,116 @@ window.abrirDataManual = function(data){
 };
 
 
-// ===== ADD RETROATIVO =====
+// ===== MODO FORMULÁRIO (ENTRADA/SAÍDA) =====
+let _entradaSelecionadaId = null;
+
+window.setModoForm = function(modo, data){
+  const fe = document.getElementById("formEntrada_"+data);
+  const fs = document.getElementById("formSaida_"+data);
+  const be = document.getElementById("btnModoEntrada");
+  const bs = document.getElementById("btnModoSaida");
+  if(!fe||!fs) return;
+  if(modo === "entrada"){
+    fe.style.display=""; fs.style.display="none";
+    be.style.background="var(--accent)"; be.style.color="#000"; be.style.border="none";
+    bs.style.background="var(--surface2)"; bs.style.color="var(--muted)"; bs.style.border="1px solid var(--border)";
+  } else {
+    fe.style.display="none"; fs.style.display="";
+    bs.style.background="var(--accent)"; bs.style.color="#000"; bs.style.border="none";
+    be.style.background="var(--surface2)"; be.style.color="var(--muted)"; be.style.border="1px solid var(--border)";
+    mostrarEntradasAbertas(data, "");
+  }
+};
+
+// Mostra entradas sem saída, filtrando por placa se informada
+function mostrarEntradasAbertas(data, filtroPlaca){
+  const el = document.getElementById("entradasAbertas_"+data);
+  if(!el) return;
+  const registros = (historicoCache[data]||[]).filter(r =>
+    !r.saida && (!filtroPlaca || r.placa.includes(filtroPlaca.toUpperCase()))
+  );
+  if(registros.length === 0){
+    el.innerHTML = `<div style="font-size:12px;color:var(--muted);padding:8px 0;">Nenhuma entrada aberta encontrada.</div>`;
+    return;
+  }
+  let html = `<div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:700;">ENTRADAS SEM SAÍDA — clique para selecionar:</div>
+    <div style="display:flex;flex-direction:column;gap:6px;">`;
+  registros.forEach(r => {
+    html += `<div id="cardEntrada_${r.id}" onclick="selecionarEntrada('${r.id}','${r.placa}','${r.nome}','${data}')"
+      style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 12px;cursor:pointer;display:flex;gap:16px;align-items:center;font-size:13px;transition:border-color .15s;">
+      <b style="color:var(--accent)">${r.placa}</b>
+      <span style="color:#e6edf3">${r.nome}</span>
+      <span style="color:var(--muted)">${r.hora}</span>
+      <span style="color:var(--muted);font-size:11px">${r.empresa||""}</span>
+    </div>`;
+  });
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+window.buscarEntradaAberta = function(data){
+  const placa = document.getElementById("saidaPlaca").value.trim();
+  _entradaSelecionadaId = null;
+  document.getElementById("saidaInfoEntrada").innerHTML = `<span style="color:var(--muted)">Digite a placa para buscar a entrada</span>`;
+  mostrarEntradasAbertas(data, placa);
+};
+
+window.selecionarEntrada = function(id, placa, nome, data){
+  _entradaSelecionadaId = id;
+  // Highlight card selecionado
+  document.querySelectorAll("[id^='cardEntrada_']").forEach(el => {
+    el.style.borderColor = "var(--border)";
+    el.style.background = "var(--surface2)";
+  });
+  const card = document.getElementById("cardEntrada_"+id);
+  if(card){ card.style.borderColor="var(--accent)"; card.style.background="#1c2330"; }
+  // Preencher placa e mostrar info
+  document.getElementById("saidaPlaca").value = placa;
+  document.getElementById("saidaInfoEntrada").innerHTML =
+    `<span style="color:var(--green)">✔ ${placa} — ${nome}</span>`;
+  // Sugerir quem saiu com o nome de quem entrou
+  const qs = document.getElementById("saidaQuem");
+  if(qs && !qs.value) qs.value = nome;
+};
+
+window.registrarSaidaRetroativa = async function(data){
+  const hora  = document.getElementById("saidaHora").value;
+  const quem  = (document.getElementById("saidaQuem").value||"").trim();
+
+  if(!hora){ alert("Informe a hora de saída"); return; }
+  if(!_entradaSelecionadaId){ alert("Selecione a entrada na lista abaixo"); return; }
+
+  await updateDoc(doc(db,"portaria", _entradaSelecionadaId),{ saida: hora, quemSaiu: quem });
+
+  // Atualizar cache
+  const reg = (historicoCache[data]||[]).find(r=>r.id===_entradaSelecionadaId);
+  if(reg){ reg.saida = hora; reg.quemSaiu = quem; }
+
+  _entradaSelecionadaId = null;
+  document.getElementById("saidaPlaca").value="";
+  document.getElementById("saidaQuem").value="";
+  document.getElementById("saidaInfoEntrada").innerHTML=`<span style="color:var(--green)">✔ Saída registrada!</span>`;
+
+  renderHistorico(data);
+  setTimeout(()=>{
+    const det=document.getElementById("formRetroativo");
+    if(det) det.open=true;
+    setModoForm("saida", data);
+  },50);
+};
+
+
 window.addRetroativo = async function(data){
   const h   = document.getElementById("histHora").value;
   const p   = document.getElementById("histPlaca").value.toUpperCase().trim();
   const n   = document.getElementById("histNome").value.trim();
   const emp = (document.getElementById("histEmpresa").value||"").trim();
   const ocu = Number(document.getElementById("histOcupantes").value)||1;
-  const sai = document.getElementById("histSaida").value||"";
   const por = (document.getElementById("histPorteiro").value||"").trim();
 
   if(!h||!p||!n){ alert("Preencha hora, placa e nome!"); return; }
 
-  await addDoc(collection(db,"portaria"),{
+  const docRef = await addDoc(collection(db,"portaria"),{
     data,
     hora: h,
     placa: p,
@@ -455,25 +553,28 @@ window.addRetroativo = async function(data){
     empresa: emp,
     ocupantes: ocu,
     porteiro: por||"—",
-    saida: sai,
+    saida: "",
+    quemSaiu: "",
     ts: new Date(data+"T"+h+":00").getTime()
   });
 
   // Atualizar cache local
   if(!historicoCache[data]) historicoCache[data] = [];
-  historicoCache[data].push({data,hora:h,placa:p,nome:n,empresa:emp,ocupantes:ocu,porteiro:por||"—",saida:sai});
+  historicoCache[data].push({id:docRef.id,data,hora:h,placa:p,nome:n,empresa:emp,ocupantes:ocu,porteiro:por||"—",saida:"",quemSaiu:""});
   historicoCache[data].sort((a,b)=>a.hora.localeCompare(b.hora));
 
-  // Limpar campos
+  // Limpar campos placa/nome/empresa/ocupantes
   document.getElementById("histPlaca").value="";
   document.getElementById("histNome").value="";
   document.getElementById("histEmpresa").value="";
   document.getElementById("histOcupantes").value="1";
-  document.getElementById("histSaida").value="";
 
   renderHistorico(data);
-  // Reabre o formulário após render
-  setTimeout(()=>{ const det=document.getElementById("formRetroativo"); if(det) det.open=true; },50);
+  setTimeout(()=>{
+    const det=document.getElementById("formRetroativo");
+    if(det) det.open=true;
+    setModoForm("entrada", data);
+  },50);
 };
 
 async function carregarDatasHistorico(){
@@ -550,7 +651,7 @@ function renderHoje(){
     </div>
     <table>
       <thead><tr>
-        <th>Status</th><th>Entrada</th><th>Placa</th><th>Nome</th><th>Empresa</th><th>Tempo</th><th>Saída</th>
+        <th>Status</th><th>Entrada</th><th>Placa</th><th>Entrou</th><th>Empresa</th><th>Tempo</th><th>Saída / Quem saiu</th>
       </tr></thead>
       <tbody>`;
 
@@ -568,8 +669,15 @@ function renderHoje(){
         <td style="color:var(--muted);font-size:13px">${r.empresa||""}</td>
         <td style="color:var(--muted);font-size:13px">${calcTempo(r.hora,r.saida)}</td>
         <td>${!r.saida
-          ? `<input type="time" id="saida-${r.id}" style="width:90px"><button class="btn-saida" onclick="confirmarSaida('${r.id}')">OK</button>`
-          : `<span style="color:#8b949e">${r.saida}</span>`
+          ? `<div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;">
+               <input type="time" id="saida-${r.id}" style="width:88px">
+               <input type="text" id="quemSaiu-${r.id}" placeholder="Quem saiu" style="width:110px;font-size:12px;">
+               <button class="btn-saida" onclick="confirmarSaida('${r.id}')">OK</button>
+             </div>`
+          : `<div style="line-height:1.4">
+               <span style="color:#e6edf3;font-weight:600">${r.saida}</span>
+               ${r.quemSaiu ? `<br><span style="color:var(--muted);font-size:12px">↪ ${r.quemSaiu}</span>` : ""}
+             </div>`
         }</td>
       </tr>`;
     });
@@ -613,19 +721,61 @@ function renderHistorico(data){
         gap:8px;
       ">➕ Adicionar registro nesta data</summary>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:14px;">
-        <div class="porteiro-bar" style="margin-bottom:10px;">
-          <label>👷 Porteiro:</label>
-          <input type="text" id="histPorteiro" placeholder="Nome do porteiro..." value="${porteiroDia}">
+
+        <!-- TOGGLE MODO -->
+        <div style="display:flex;gap:8px;margin-bottom:14px;">
+          <button id="btnModoEntrada" data-data="${data}" data-modo="entrada" type="button"
+            style="flex:1;background:var(--accent);color:#000;border:none;padding:8px;border-radius:6px;font-weight:700;font-size:13px;cursor:pointer;">
+            🚗 Entrada
+          </button>
+          <button id="btnModoSaida" data-data="${data}" data-modo="saida" type="button"
+            style="flex:1;background:var(--surface2);color:var(--muted);border:1px solid var(--border);padding:8px;border-radius:6px;font-weight:700;font-size:13px;cursor:pointer;">
+            🚪 Saída
+          </button>
         </div>
-        <div class="form-area" style="margin-bottom:0;">
-          <input type="time" id="histHora" value="07:00">
-          <input type="text" id="histPlaca" placeholder="PLACA">
-          <input type="text" id="histNome" placeholder="NOME">
-          <input type="text" id="histEmpresa" placeholder="EMPRESA">
-          <input type="number" id="histOcupantes" value="1" min="1">
-          <input type="time" id="histSaida" placeholder="Saída (opcional)">
-          <button onclick="addRetroativo('${data}')">SALVAR</button>
+
+        <!-- FORM ENTRADA -->
+        <div id="formEntrada_${data}">
+          <div class="porteiro-bar" style="margin-bottom:10px;">
+            <label>👷 Porteiro:</label>
+            <input type="text" id="histPorteiro" placeholder="Nome do porteiro..." value="${porteiroDia}">
+          </div>
+          <div class="form-area" style="margin-bottom:0;">
+            <input type="time" id="histHora" value="07:00">
+            <input type="text" id="histPlaca" placeholder="PLACA">
+            <input type="text" id="histNome" placeholder="NOME">
+            <input type="text" id="histEmpresa" placeholder="EMPRESA">
+            <input type="number" id="histOcupantes" value="1" min="1">
+            <button id="btnSalvarEntrada" data-data="${data}" type="button">SALVAR ENTRADA</button>
+          </div>
         </div>
+
+        <!-- FORM SAÍDA -->
+        <div id="formSaida_${data}" style="display:none;">
+          <div class="form-area" style="margin-bottom:0;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));">
+            <div>
+              <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">PLACA</label>
+              <input type="text" id="saidaPlaca" placeholder="Digite a placa..." data-data="${data}">
+            </div>
+            <div id="saidaInfoEntrada" style="font-size:12px;color:var(--muted);display:flex;align-items:center;padding-top:18px;">
+              Digite a placa para buscar a entrada
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">HORA SAÍDA</label>
+              <input type="time" id="saidaHora" value="18:00">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;">QUEM SAIU</label>
+              <input type="text" id="saidaQuem" placeholder="Nome de quem saiu">
+            </div>
+            <div style="display:flex;align-items:flex-end;">
+              <button id="btnDarBaixa" data-data="${data}" type="button" style="width:100%">DAR BAIXA</button>
+            </div>
+          </div>
+          <!-- Lista de entradas abertas -->
+          <div id="entradasAbertas_${data}" style="margin-top:10px;"></div>
+        </div>
+
       </div>
     </details>
 
@@ -634,14 +784,14 @@ function renderHistorico(data){
     </div>
     <table>
       <thead><tr>
-        <th>Entrada</th><th>Placa</th><th>Ocup.</th><th>Nome(s)</th><th>Empresa</th><th>Saída</th><th>Tempo</th>
+        <th>Entrada</th><th>Placa</th><th>Ocup.</th><th>Entrou</th><th>Empresa</th><th>Saída</th><th>Quem saiu</th><th>Tempo</th>
       </tr></thead>
       <tbody id="corpoHist">`;
 
   let totalOcup=0, comSaida=0;
 
   if(registros.length === 0){
-    html += `<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--muted);">
+    html += `<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted);">
       Nenhum registro para esta data.<br>
       <small style="font-size:12px;">Use o formulário acima para adicionar registros retroativos.</small>
     </td></tr>`;
@@ -656,6 +806,7 @@ function renderHistorico(data){
       <td>${r.nome}</td>
       <td style="color:var(--muted);font-size:13px">${r.empresa||""}</td>
       <td>${r.saida||'<span style="color:var(--muted)">—</span>'}</td>
+      <td style="color:var(--muted);font-size:13px">${r.quemSaiu||'<span style="color:var(--muted)">—</span>'}</td>
       <td style="color:var(--muted);font-size:13px">${calcTempo(r.hora,r.saida)}</td>
     </tr>`;
   });
@@ -673,6 +824,19 @@ function renderHistorico(data){
   document.getElementById("contDentro").innerText = registros.filter(r=>!r.saida).length;
   document.getElementById("contSaiu").innerText = comSaida;
   document.getElementById("contTotal").innerText = registros.length;
+
+  // ── Bind botões do formulário retroativo ──
+  const btnEntrada = document.getElementById("btnModoEntrada");
+  const btnSaida   = document.getElementById("btnModoSaida");
+  const btnSalvar  = document.getElementById("btnSalvarEntrada");
+  const btnBaixa   = document.getElementById("btnDarBaixa");
+  const inputPlaca = document.getElementById("saidaPlaca");
+
+  if(btnEntrada) btnEntrada.addEventListener("click", e => { e.stopPropagation(); setModoForm("entrada", data); });
+  if(btnSaida)   btnSaida.addEventListener("click",   e => { e.stopPropagation(); setModoForm("saida",   data); });
+  if(btnSalvar)  btnSalvar.addEventListener("click",  e => { e.stopPropagation(); addRetroativo(data); });
+  if(btnBaixa)   btnBaixa.addEventListener("click",   e => { e.stopPropagation(); registrarSaidaRetroativa(data); });
+  if(inputPlaca) inputPlaca.addEventListener("input", () => buscarEntradaAberta(data));
 }
 
 // ===== FILTRAR HISTÓRICO =====
@@ -692,6 +856,7 @@ window.filtrarHist = function(data){
       <td>${r.nome}</td>
       <td style="color:var(--muted);font-size:13px">${r.empresa||""}</td>
       <td>${r.saida||'<span style="color:var(--muted)">—</span>'}</td>
+      <td style="color:var(--muted);font-size:13px">${r.quemSaiu||'<span style="color:var(--muted)">—</span>'}</td>
       <td style="color:var(--muted);font-size:13px">${calcTempo(r.hora,r.saida)}</td>
     </tr>`;
   });
@@ -706,9 +871,7 @@ window.add = async function(){
   porteiroAtual = (document.getElementById("porteiro").value||"").trim();
 
   if(!h||!p||!n){ alert("Preencha hora, placa e nome!"); return; }
-  if(registrosHoje.find(r=>r.placa===p && !r.saida)){
-    alert("Veículo já está no pátio!"); return;
-  }
+
 
   await addDoc(collection(db,"portaria"),{
     data: hoje,
@@ -733,15 +896,16 @@ window.add = async function(){
 window.confirmarSaida = async function(id){
   const hora = document.getElementById("saida-"+id).value;
   if(!hora){ alert("Informe a hora de saída"); return; }
-  await updateDoc(doc(db,"portaria",id),{saida:hora});
+  const quemSaiu = (document.getElementById("quemSaiu-"+id).value||"").trim();
+  await updateDoc(doc(db,"portaria",id),{saida:hora, quemSaiu});
 };
 
 // ===== EXPORTAR =====
 window.exportar = function(){
   const lista = abaAtiva==="hoje" ? registrosHoje : (historicoCache[abaAtiva]||[]);
-  let csv="Data;Placa;Nome;Empresa;Porteiro;Entrada;Saida\n";
+  let csv="Data;Placa;Nome;Quem Saiu;Empresa;Porteiro;Entrada;Saida\n";
   lista.forEach(r=>{
-    csv+=`${r.data};${r.placa};${r.nome};${r.empresa||""};${r.porteiro||""};${r.hora};${r.saida||""}\n`;
+    csv+=`${r.data};${r.placa};${r.nome};${r.quemSaiu||""};${r.empresa||""};${r.porteiro||""};${r.hora};${r.saida||""}\n`;
   });
   const blob=new Blob(["\ufeff"+csv]);
   const a=document.createElement("a");
