@@ -4,374 +4,320 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portaria PRO - BUCAGRANS</title>
+<title>PORTARIA PRO - BUCAGRANS</title>
 <style>
 :root {
-  --bg:#0d1117;
-  --surface:#161b22;
-  --surface2:#1c2330;
-  --border:#30363d;
-  --accent:#f0a500;
-  --green:#3fb950;
-  --blue:#388bfd;
-  --text:#e6edf3;
-  --muted:#8b949e;
-  --radius:10px;
-  font-size:15px;
-  color-scheme: dark;
+  --bg-grad: radial-gradient(ellipse at 50% 0%, #0d2a4a 0%, #071525 55%, #020c17 100%);
+  --glass: rgba(255,255,255,.06);
+  --glass-2: rgba(255,255,255,.08);
+  --line: rgba(255,255,255,.12);
+  --line-soft: rgba(255,255,255,.08);
+  --accent: #f59e0b;
+  --brand: #1e3a5f;
+  --txt: #e2e8f0;
+  --muted: #94a3b8;
+  --muted-2: #64748b;
+  --ok: #22c55e;
+  --blue: #1e3a5f;
+  --danger: #ef4444;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
+*{box-sizing:border-box;margin:0;padding:0}
 body{
-  background:var(--bg);
-  color:var(--text);
-  padding:20px;
   font-family:'Segoe UI',system-ui,sans-serif;
-  font-size:15px;
+  background:var(--bg-grad);
+  min-height:100vh;
+  color:var(--txt);
+  padding:0;
   line-height:1.5;
+  text-transform:uppercase;
 }
-
-/* ── HEADER ── */
 header{
-background:#ffffff;
-padding:15px;
-border-bottom:2px solid var(–accent);
-display:flex;
-justify-content:space-between;
-align-items:center;
-border-radius:10px 10px 0 0;
-flex-wrap:wrap;
-gap:10px;
-color:#111;
+  background:#fff;
+  padding:14px 28px;
+  border-bottom:1.5px solid #e5e7eb;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+  color:#111827;
 }
-header h2{color:#111;font-size:18px;}
-header small{color:#333;}
+header h2{color:var(--brand);font-size:18px;font-weight:800}
+header small{color:#64748b}
 
-/* ── STATS ── */
+.stats,
+.tabs-wrap,
+#abaConteudo,
+#telaHistorico{
+  max-width:1400px;
+  margin-left:auto;
+  margin-right:auto;
+}
 .stats{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-margin:15px 0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-top:24px;
+  margin-bottom:18px;
+  padding:0 28px;
 }
 .card{
-background:var(–surface);
-padding:15px;
-border-radius:var(–radius);
-border:1px solid var(–border);
-text-align:center;
+  background:var(--glass);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:18px 22px;
+  backdrop-filter:blur(8px);
+  text-align:center;
 }
 .card small{
-display:block;
-color:var(–muted);
-font-size:12px;
-font-weight:600;
-letter-spacing:.05em;
-margin-bottom:4px;
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  font-weight:700;
+  letter-spacing:.06em;
+  margin-bottom:6px;
 }
 
-/* ── FORM ── */
-.form-area{
-background:#161b22;
-padding:20px;
-border-radius:var(–radius);
-margin-bottom:20px;
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-gap:10px;
-}
-
-/* ── INPUTS GLOBAL ── */
-input, select, textarea {
-background:var(–surface2);
-border:1px solid var(–border);
-padding:10px 12px;
-border-radius:6px;
-color:#e6edf3;
-font-size:14px;
-font-family:inherit;
-width:100%;
-}
-input::placeholder{ color:#6e7681; }
-input:focus{
-outline:none;
-border-color:var(–accent);
-background:#21262d;
-}
-input[type=“time”]{
-color:#e6edf3;
-background:var(–surface2);
-}
-
-/* ── BOTÕES ── */
-button{
-background:var(–accent);
-color:#000;
-border:none;
-padding:10px 14px;
-border-radius:6px;
-font-weight:700;
-font-size:14px;
-cursor:pointer;
-font-family:inherit;
-transition:opacity .15s;
-}
-button:hover{opacity:.88;}
-
-/* ── PORTEIRO BAR ── */
-.porteiro-bar{
-background:var(–surface2);
-border-radius:8px;
-padding:12px 16px;
-margin-bottom:12px;
-display:flex;
-align-items:center;
-gap:12px;
-border:1px solid var(–border);
-}
-.porteiro-bar label{
-font-weight:700;
-font-size:13px;
-color:var(–accent);
-white-space:nowrap;
-}
-.porteiro-bar input{
-flex:1;
-background:var(–surface);
-border:1px solid var(–border);
-color:#e6edf3;
-font-size:14px;
-font-weight:600;
-}
-.porteiro-bar input::placeholder{color:#6e7681;}
-
-/* ── TABS — apenas 2 fixas ── */
 .tabs-wrap{
-display:flex;
-gap:8px;
-margin-bottom:15px;
-align-items:center;
+  display:flex;
+  gap:6px;
+  align-items:center;
+  margin-bottom:15px;
+  padding:0 28px;
 }
 .tab{
-background:var(–surface);
-border:1px solid var(–border);
-color:#c9d1d9;
-padding:10px 24px;
-border-radius:6px;
-cursor:pointer;
-font-weight:700;
-font-size:14px;
-white-space:nowrap;
-transition:background .15s;
+  padding:9px 16px;
+  border:none;
+  background:transparent;
+  color:var(--muted-2);
+  border-radius:10px;
+  font-weight:700;
+  font-size:13px;
+  cursor:pointer;
+  font-family:inherit;
+  transition:all .2s;
 }
-.tab:hover{background:var(–surface2);}
-.tab.ativo{
-background:var(–accent);
-color:#000;
-border-color:var(–accent);
+.tab:hover:not(.ativo){background:rgba(30,58,95,.07);color:var(--brand)}
+.tab.ativo{background:var(--brand);color:#fff;box-shadow:inset 0 0 0 2px var(--accent)}
+
+#abaConteudo,
+#telaHistorico{padding:0 28px 26px}
+
+.porteiro-bar,
+.form-area,
+.hist-selecao,
+.resumo-dia,
+.table-wrap-proxy{
+  background:var(--glass);
+  border:1px solid var(--line);
+  border-radius:14px;
+  backdrop-filter:blur(8px);
+}
+.porteiro-bar{
+  padding:12px 16px;
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.porteiro-bar label{font-weight:700;font-size:13px;color:var(--muted);white-space:nowrap}
+
+.form-area{
+  padding:16px;
+  margin-bottom:16px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:10px;
 }
 
-/* ── TELA HISTÓRICO — seleção de data ── */
-#telaHistorico{
-display:none;
+input, select, textarea{
+  background:rgba(255,255,255,.08);
+  border:1.5px solid rgba(255,255,255,.15);
+  color:var(--txt);
+  padding:10px 12px;
+  border-radius:9px;
+  font-size:14px;
+  font-family:inherit;
+  width:100%;
+  outline:none;
 }
-#telaHistorico.visivel{
-display:block;
-}
+input::placeholder,textarea::placeholder{color:var(--muted-2)}
+input:focus,select:focus,textarea:focus{border-color:rgba(245,158,11,.6);box-shadow:0 0 0 2px rgba(245,158,11,.2)}
+input:not([type]), input[type="text"], input[type="search"], input[type="tel"], input[type="email"], textarea{text-transform:uppercase}
 
-.hist-selecao{
-background:var(–surface);
-border:1px solid var(–border);
-border-radius:var(–radius);
-padding:20px;
-margin-bottom:16px;
+button{
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  padding:10px 14px;
+  border-radius:9px;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  font-family:inherit;
+  transition:opacity .15s, transform .15s;
 }
-.hist-selecao h3{
-font-size:14px;
-font-weight:700;
-color:var(–accent);
-margin-bottom:14px;
-letter-spacing:.04em;
-}
+button:hover{opacity:.9;transform:translateY(-1px)}
 
-/* grid de cards de datas */
-.datas-grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
-gap:8px;
-margin-bottom:16px;
+#telaHistorico{display:none}
+#telaHistorico.visivel{display:block}
+.hist-selecao{padding:20px;margin-bottom:16px}
+.hist-selecao h3{font-size:14px;font-weight:800;color:var(--txt);margin-bottom:14px;letter-spacing:.03em}
+
+.meses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:12px}
+.mes-card{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:10px;
+  padding:10px 8px;
+  cursor:pointer;
+  transition:all .18s;
+  min-height:84px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  text-align:center;
 }
+.mes-card:hover{transform:translateY(-1px);border-color:rgba(245,158,11,.6);background:rgba(255,255,255,.12)}
+.mes-card.ativo{border-color:var(--accent);box-shadow:0 0 0 2px rgba(245,158,11,.25) inset}
+.mc-mes{font-size:18px;font-weight:800;line-height:1;color:var(--txt)}
+.mc-ano{font-size:10px;font-weight:700;color:var(--muted);margin-top:2px;letter-spacing:.05em}
+.mc-info{font-size:9px;font-weight:700;color:#4ade80;background:#16653433;padding:2px 6px;border-radius:999px;display:inline-block;margin:6px auto 0}
+.mc-toggle{font-size:9px;color:var(--muted);font-weight:800;margin-top:6px;letter-spacing:.04em}
+
+.mes-dias{display:none;margin-bottom:14px}
+.mes-dias.visivel{display:block}
+.datas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
 .data-card{
-background:var(–surface2);
-border:1px solid var(–border);
-border-radius:8px;
-padding:10px 12px;
-cursor:pointer;
-text-align:center;
-transition:border-color .15s, background .15s;
+  background:var(--glass-2);
+  border:1px solid var(--line-soft);
+  border-radius:10px;
+  padding:10px 12px;
+  cursor:pointer;
+  text-align:center;
+  transition:border-color .15s, background .15s, transform .15s;
 }
-.data-card:hover{
-border-color:var(–accent);
-background:#1c2330;
-}
-.data-card.ativa{
-border-color:var(–accent);
-background:#21262d;
-}
-.data-card .dc-dia{
-font-size:22px;
-font-weight:700;
-color:var(–text);
-line-height:1;
-}
-.data-card .dc-mes{
-font-size:11px;
-color:var(–muted);
-font-weight:600;
-letter-spacing:.05em;
-margin-top:2px;
-}
-.data-card .dc-badge{
-font-size:10px;
-font-weight:700;
-margin-top:5px;
-padding:2px 6px;
-border-radius:4px;
-background:#30363d;
-color:var(–muted);
-display:inline-block;
-}
+.data-card:hover{border-color:rgba(245,158,11,.55);background:rgba(255,255,255,.12);transform:translateY(-1px)}
+.data-card.ativa{border-color:var(--accent);box-shadow:0 0 0 2px rgba(245,158,11,.28) inset}
+.data-card .dc-dia{font-size:22px;font-weight:800;color:var(--txt);line-height:1}
+.data-card .dc-mes{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.05em;margin-top:2px}
+.data-card .dc-badge{font-size:10px;font-weight:700;margin-top:5px;padding:2px 6px;border-radius:999px;background:rgba(255,255,255,.14);color:var(--muted);display:inline-block}
 
-/* input data manual dentro da tela de histórico */
 .hist-data-manual{
-display:flex;
-align-items:center;
-gap:10px;
-background:var(–surface2);
-border:1px solid var(–border);
-border-radius:6px;
-padding:10px 14px;
-margin-top:8px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:10px;
+  padding:10px 14px;
+  margin-top:8px;
 }
-.hist-data-manual label{
-font-size:13px;
-font-weight:700;
-color:var(–muted);
-white-space:nowrap;
-}
-.hist-data-manual input[type=“date”]{
-background:transparent;
-border:none;
-color:#e6edf3;
-font-size:13px;
-font-weight:700;
-font-family:inherit;
-cursor:pointer;
-padding:0;
-width:auto;
-color-scheme: dark;
-}
+.hist-data-manual label{font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
+.hist-data-manual input[type="date"]{background:transparent;border:none;padding:0;width:auto;color-scheme:dark}
 
-/* painel do dia selecionado dentro de histórico */
-#painelDiaSelecionado{
-display:none;
-}
-#painelDiaSelecionado.visivel{
-display:block;
-}
+#painelDiaSelecionado{display:none}
+#painelDiaSelecionado.visivel{display:block}
 .voltar-btn{
-background:var(–surface2);
-border:1px solid var(–border);
-color:var(–muted);
-font-size:13px;
-font-weight:700;
-padding:7px 14px;
-border-radius:6px;
-cursor:pointer;
-margin-bottom:14px;
-display:inline-flex;
-align-items:center;
-gap:6px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.16);
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+  padding:7px 14px;
+  border-radius:9px;
+  cursor:pointer;
+  margin-bottom:14px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
 }
-.voltar-btn:hover{
-border-color:var(–accent);
-color:var(–accent);
-}
+.voltar-btn:hover{border-color:rgba(245,158,11,.6);color:#fbbf24}
 
-/* ── TABELA ── */
-table{width:100%;border-collapse:collapse;}
-th{
-padding:12px;
-border-bottom:2px solid var(–accent);
-text-align:left;
-color:#8b949e;
-font-size:12px;
-font-weight:700;
-text-transform:uppercase;
-letter-spacing:.05em;
-}
-td{
-padding:10px 12px;
-border-bottom:1px solid var(–border);
-color:#e6edf3;
-font-size:14px;
-}
-tr:hover td{background:#1c2330;}
+.busca-wrap{margin-bottom:14px}
 
-/* ── BADGES ── */
-.badge{padding:4px 8px;border-radius:4px;font-size:11px;font-weight:700;}
-.dentro{background:#3fb95022;color:#3fb950;}
-.saiu{background:#30363d;color:#8b949e;}
+table{width:100%;border-collapse:collapse;font-size:13px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+thead tr{background:rgba(255,255,255,.08);border-bottom:2px solid rgba(255,255,255,.12)}
+th{padding:11px 13px;text-align:left;font-weight:700;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+td{padding:10px 12px;color:#cbd5e1;border-bottom:1px solid rgba(255,255,255,.06)}
+tbody tr:nth-child(even){background:rgba(255,255,255,.03)}
+tbody tr:hover td{background:rgba(255,255,255,.08)}
 
-/* ── BOTÃO SAÍDA ── */
-.btn-saida{
-background:var(–blue);
-color:#fff;
-padding:5px 10px;
-font-size:12px;
-font-weight:700;
-border:none;
-border-radius:4px;
-cursor:pointer;
-}
-.btn-saida:hover{opacity:.85;}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800}
+.dentro{background:#dcfce7;color:#166534}
+.saiu{background:#e2e8f0;color:#475569}
 
-/* ── BUSCA ── */
-.busca-wrap{margin-bottom:15px;}
+.btn-saida{background:var(--blue);color:#fff;padding:6px 10px;font-size:12px;font-weight:700;border-radius:8px}
 
-/* ── SEÇÃO TÍTULO ── */
 .secao-titulo{
-background:var(–surface2);
-border-left:3px solid var(–accent);
-padding:10px 15px;
-margin:10px 0 15px 0;
-font-weight:700;
-font-size:13px;
-color:var(–accent);
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--line);
+  border-left:3px solid var(--accent);
+  padding:10px 15px;
+  margin:10px 0 15px;
+  font-weight:700;
+  font-size:13px;
+  color:var(--txt);
+  border-radius:10px;
 }
 
-/* ── RESUMO DIA ── */
-.resumo-dia{
-margin-top:15px;
-padding:12px 16px;
-background:var(–surface);
-border-radius:var(–radius);
-border:1px solid var(–border);
-font-size:13px;
-color:#c9d1d9;
-}
+.resumo-dia{margin-top:15px;padding:12px 16px;font-size:13px;color:#cbd5e1}
 
-/* ── STATUS FIREBASE ── */
+#modalEdicao{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:9999;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+#modalEdicao.aberto{display:flex}
+.modal-box{
+  background:#fff;
+  border-radius:20px;
+  padding:28px;
+  width:100%;
+  max-width:460px;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+  border:1px solid #e5e7eb;
+}
+.modal-box h3{font-size:17px;font-weight:800;color:var(--brand);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.modal-campo{margin-bottom:12px}
+.modal-campo label{display:block;font-size:11px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.modal-box input,.modal-box select,.modal-box textarea{
+  background:#fff;
+  border:1.5px solid #e5e7eb;
+  color:#111827;
+}
+.modal-box input::placeholder{color:#9ca3af}
+.modal-acoes{display:flex;gap:8px;margin-top:18px}
+.modal-acoes button{flex:1}
+.btn-cancelar{background:#9ca3af !important;color:#fff !important;border:1px solid #9ca3af !important}
+
 #fbStatus{
-display:inline-flex;
-align-items:center;
-gap:6px;
-background:#f1f5f9;
-border:1px solid #cbd5e1;
-border-radius:20px;
-padding:5px 12px;
-font-size:12px;
-font-weight:700;
-color:#64748b;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:#f1f5f9;
+  border:1px solid #cbd5e1;
+  border-radius:20px;
+  padding:5px 12px;
+  font-size:12px;
+  font-weight:700;
+  color:#64748b;
+}
+
+@media(max-width:900px){
+  .stats{grid-template-columns:repeat(2,1fr);padding:0 16px}
+  .tabs-wrap,#abaConteudo,#telaHistorico{padding-left:16px;padding-right:16px}
+  header{padding:14px 16px}
+}
+@media(max-width:640px){
+  .stats{grid-template-columns:1fr}
+  .porteiro-bar{flex-direction:column;align-items:stretch}
 }
 </style>
 
@@ -380,15 +326,16 @@ color:#64748b;
 
 <header>
   <div style="display:flex;align-items:center;gap:12px">
-    <img src="logo-pch.png" alt="Logo PCH" style="height:48px;object-fit:contain">
-    <h2>🚧 BUCAGRANS Portaria</h2>
+    <img src="logo-pch.png" alt="LOGO PCH" style="height:48px;object-fit:contain">
+    <h2>🚧 BUCAGRANS PORTARIA</h2>
   </div>
   <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
     <span id="fbStatus">
       <span id="fbDot" style="width:8px;height:8px;border-radius:50%;background:#94a3b8;display:inline-block;"></span>
-      <span id="fbTxt">Conectando...</span>
+      <span id="fbTxt">CONECTANDO...</span>
     </span>
-    <button onclick="exportar()">📊 Exportar CSV</button>
+    <button onclick="baixarRelatorio()">🧾 BAIXAR RELATÓRIO</button>
+    <button onclick="exportar()">📊 EXPORTAR CSV</button>
     <button onclick="baixarPlanilha()" style="background:#1c2330;color:#e6edf3;border:1px solid var(--border);">📄 Baixar Folha PDF</button>
   </div>
 </header>
@@ -453,9 +400,11 @@ window.baixarPlanilha = function(){
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, doc, onSnapshot, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAs_46w5fHouaTWPRb-NDWE8LvsbsQTZz4",
@@ -476,6 +425,7 @@ let dataSelecionada = null;  // data aberta no histórico
 let registrosHoje = [];
 let historicoCache = {};
 let datasHistorico = [];
+let mesesExpandidos = {};
 let unsubHoje;
 let porteiroAtual = localStorage.getItem("porteiro_dia") || "";
 
@@ -512,7 +462,7 @@ historicoCache["2026-04-16"] = historico1604;
 // ===== FIREBASE STATUS =====
 function setFbStatus(ok){
   document.getElementById("fbDot").style.background = ok ? "#22c55e" : "#ef4444";
-  document.getElementById("fbTxt").textContent = ok ? "Firebase OK" : "Sem conexão";
+  document.getElementById("fbTxt").textContent = ok ? "FIREBASE OK" : "SEM CONEXAO";
   document.getElementById("fbStatus").style.color = ok ? "#15803d" : "#b91c1c";
   document.getElementById("fbStatus").style.background = ok ? "#f0fdf4" : "#fef2f2";
   document.getElementById("fbStatus").style.borderColor = ok ? "#86efac" : "#fca5a5";
@@ -537,6 +487,10 @@ function calcTempo(e, s){
 function fmtData(d){
   const [y,m,dd] = d.split("-");
   return `${dd}/${m}/${y.slice(2)}`;
+}
+
+function emMaiusculo(v){
+  return (v || "").toString().trim().toUpperCase();
 }
 
 // ===== RENDER TABS =====
@@ -582,25 +536,70 @@ function renderDatasGrid(){
     return;
   }
 
-  let html = "";
-  datas.forEach(d => {
-    const regs = historicoCache[d] || [];
-    const total = regs.length;
-    const semSaida = regs.filter(r=>!r.saida).length;
-    const [y,m,dd] = d.split("-");
-    const meses = ["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
-    const mesNome = meses[parseInt(m)-1] || m;
+  const meses = ["JANEIRO","FEVEREIRO","MARCO","ABRIL","MAIO","JUNHO","JULHO","AGOSTO","SETEMBRO","OUTUBRO","NOVEMBRO","DEZEMBRO"];
+  const agrupado = {};
 
-    html += `<div class="data-card ${dataSelecionada===d?'ativa':''}" onclick="abrirData('${d}')">
-      <div class="dc-dia">${dd}</div>
-      <div class="dc-mes">${mesNome} ${y.slice(2)}</div>
-      ${total > 0
-        ? `<div class="dc-badge" style="background:#3fb95022;color:#3fb950">${total} veíc.</div>`
-        : `<div class="dc-badge">vazio</div>`
-      }
-      ${semSaida > 0 ? `<div class="dc-badge" style="background:#f0a50022;color:#f0a500;margin-left:2px">${semSaida} abertos</div>` : ""}
-    </div>`;
+  datas.forEach(d => {
+    const [y,m] = d.split("-");
+    const chaveMes = `${y}-${m}`;
+    if(!agrupado[chaveMes]) agrupado[chaveMes] = [];
+    agrupado[chaveMes].push(d);
   });
+
+  const chavesMes = Object.keys(agrupado).sort((a,b) => b.localeCompare(a));
+  if(chavesMes.length && !chavesMes.some(k => mesesExpandidos[k])) mesesExpandidos[chavesMes[0]] = true;
+
+  let html = `<div class="meses-grid">`;
+  chavesMes.forEach(chaveMes => {
+      const [y,m] = chaveMes.split("-");
+      const nomeMes = meses[parseInt(m,10)-1] || m;
+      const diasMes = agrupado[chaveMes].sort((a,b) => b.localeCompare(a));
+      const ativo = !!mesesExpandidos[chaveMes];
+
+      let totalMes = 0;
+      let abertosMes = 0;
+      diasMes.forEach(d => {
+        const regs = historicoCache[d] || [];
+        totalMes += regs.length;
+        abertosMes += regs.filter(r=>!r.saida).length;
+      });
+
+      html += `<div class="mes-card ${ativo ? 'ativo' : ''}" onclick="toggleMes('${chaveMes}')">
+        <div class="mc-mes">${nomeMes.slice(0,3)}</div>
+        <div class="mc-ano">${y}</div>
+        <div class="mc-info">${totalMes} VEIC.</div>
+        <div class="mc-toggle">${ativo ? 'CLIQUE PARA RECOLHER' : 'CLIQUE PARA EXPANDIR'}</div>
+      </div>`;
+  });
+  html += `</div>`;
+
+  chavesMes.forEach(chaveMes => {
+      const diasMes = agrupado[chaveMes].sort((a,b) => b.localeCompare(a));
+      const ativo = !!mesesExpandidos[chaveMes];
+
+      html += `<div class="mes-dias ${ativo ? 'visivel' : ''}"><div class="datas-grid">`;
+
+      diasMes.forEach(d => {
+        const regs = historicoCache[d] || [];
+        const total = regs.length;
+        const semSaida = regs.filter(r=>!r.saida).length;
+        const [yy,mm,dd] = d.split("-");
+        const mesCurto = ["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"][parseInt(mm,10)-1] || mm;
+
+        html += `<div class="data-card ${dataSelecionada===d?'ativa':''}" onclick="abrirData('${d}')">
+          <div class="dc-dia">${dd}</div>
+          <div class="dc-mes">${mesCurto} ${yy.slice(2)}</div>
+          ${total > 0
+            ? `<div class="dc-badge" style="background:#3fb95022;color:#3fb950">${total} VEIC.</div>`
+            : `<div class="dc-badge">VAZIO</div>`
+          }
+          ${semSaida > 0 ? `<div class="dc-badge" style="background:#f0a50022;color:#f0a500;margin-left:2px">${semSaida} ABERTOS</div>` : ""}
+        </div>`;
+      });
+
+      html += `</div></div>`;
+  });
+
   document.getElementById("datasGrid").innerHTML = html;
 }
 
@@ -634,7 +633,16 @@ window.abrirDataManual = function(data){
   if(data === hoje){ setAba("hoje"); return; }
   if(!historicoCache[data]) historicoCache[data] = [];
   if(!datasHistorico.includes(data)) datasHistorico.push(data);
+  const [y,m] = data.split("-");
+  mesesExpandidos[`${y}-${m}`] = true;
   abrirData(data);
+};
+
+window.toggleMes = function(chaveMes){
+  const estavaAberto = !!mesesExpandidos[chaveMes];
+  mesesExpandidos = {};
+  if(!estavaAberto) mesesExpandidos[chaveMes] = true;
+  renderDatasGrid();
 };
 
 // ===== MODO FORMULÁRIO (ENTRADA/SAÍDA) =====
@@ -707,7 +715,7 @@ window.selecionarEntrada = function(id, placa, nome, data){
 
 window.registrarSaidaRetroativa = async function(data){
   const hora  = document.getElementById("saidaHora").value;
-  const quem  = (document.getElementById("saidaQuem").value||"").trim();
+  const quem  = emMaiusculo(document.getElementById("saidaQuem").value);
   if(!hora){ alert("Informe a hora de saída"); return; }
   if(!_entradaSelecionadaId){ alert("Selecione a entrada na lista abaixo"); return; }
   await updateDoc(doc(db,"portaria", _entradaSelecionadaId),{ saida: hora, quemSaiu: quem });
@@ -728,10 +736,10 @@ window.registrarSaidaRetroativa = async function(data){
 window.addRetroativo = async function(data){
   const h   = document.getElementById("histHora").value;
   const p   = document.getElementById("histPlaca").value.toUpperCase().trim();
-  const n   = document.getElementById("histNome").value.trim();
-  const emp = (document.getElementById("histEmpresa").value||"").trim();
+  const n   = emMaiusculo(document.getElementById("histNome").value);
+  const emp = emMaiusculo(document.getElementById("histEmpresa").value);
   const ocu = Number(document.getElementById("histOcupantes").value)||1;
-  const por = (document.getElementById("histPorteiro").value||"").trim();
+  const por = emMaiusculo(document.getElementById("histPorteiro").value);
   if(!h||!p||!n){ alert("Preencha hora, placa e nome!"); return; }
   const docRef = await addDoc(collection(db,"portaria"),{
     data, hora: h, placa: p, nome: n, empresa: emp, ocupantes: ocu,
@@ -827,7 +835,7 @@ function renderHoje(){
     </div>
     <table>
       <thead><tr>
-        <th>Status</th><th>Entrada</th><th>Placa</th><th>Entrou</th><th>Empresa</th><th>Tempo</th><th>Saída / Quem saiu</th>
+        <th>Status</th><th>Entrada</th><th>Placa</th><th>Entrou</th><th>Empresa</th><th>Tempo</th><th>Saída / Quem saiu</th><th></th>
       </tr></thead>
       <tbody>`;
 
@@ -855,6 +863,7 @@ function renderHoje(){
                ${r.quemSaiu ? `<br><span style="color:var(--muted);font-size:12px">↪ ${r.quemSaiu}</span>` : ""}
              </div>`
         }</td>
+        <td><button onclick="abrirEdicao('${r.id}','${r.hora}','${r.placa}','${r.nome.replace(/'/g,"\\'")}','${(r.empresa||"").replace(/'/g,"\\'")}',${r.ocupantes||1},'${r.saida||""}','${(r.quemSaiu||"").replace(/'/g,"\\'")}'); event.stopPropagation();" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 8px;font-size:12px;border-radius:4px;margin-right:3px">✏️</button><button onclick="apagarRegistro('${r.id}','${r.placa} — ${r.nome.replace(/'/g,"\\'")}'); event.stopPropagation();" style="background:transparent;border:1px solid #6e2020;color:#f87171;padding:4px 8px;font-size:12px;border-radius:4px;">🗑️</button></td>
       </tr>`;
     });
 
@@ -865,7 +874,8 @@ function renderHoje(){
   document.getElementById("contTotal").innerText = registrosHoje.length;
 
   document.getElementById("porteiro").addEventListener("input", e => {
-    porteiroAtual = e.target.value;
+    porteiroAtual = emMaiusculo(e.target.value);
+    e.target.value = porteiroAtual;
     localStorage.setItem("porteiro_dia", porteiroAtual);
   });
 }
@@ -941,13 +951,13 @@ function renderHistorico(data){
     </div>
     <table>
       <thead><tr>
-        <th>Entrada</th><th>Placa</th><th>Ocup.</th><th>Entrou</th><th>Empresa</th><th>Saída</th><th>Quem saiu</th><th>Tempo</th>
+        <th>Entrada</th><th>Placa</th><th>Ocup.</th><th>Entrou</th><th>Empresa</th><th>Saída</th><th>Quem saiu</th><th>Tempo</th><th></th>
       </tr></thead>
       <tbody id="corpoHist">`;
 
   let totalOcup=0, comSaida=0;
   if(registros.length === 0){
-    html += `<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--muted);">
+    html += `<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--muted);">
       Nenhum registro para esta data.<br>
       <small style="font-size:12px;">Use o formulário acima para adicionar registros retroativos.</small>
     </td></tr>`;
@@ -964,6 +974,7 @@ function renderHistorico(data){
       <td>${r.saida||'<span style="color:var(--muted)">—</span>'}</td>
       <td style="color:var(--muted);font-size:13px">${r.quemSaiu||'<span style="color:var(--muted)">—</span>'}</td>
       <td style="color:var(--muted);font-size:13px">${calcTempo(r.hora,r.saida)}</td>
+      <td><button onclick="abrirEdicao('${r.id}','${r.hora}','${r.placa}','${r.nome.replace(/'/g,"\\'")}','${(r.empresa||"").replace(/'/g,"\\'")}',${r.ocupantes||1},'${r.saida||""}','${(r.quemSaiu||"").replace(/'/g,"\\'")}'); event.stopPropagation();" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 8px;font-size:12px;border-radius:4px;margin-right:3px">✏️</button><button onclick="apagarRegistro('${r.id}','${r.placa} — ${r.nome.replace(/'/g,"\\'")}'); event.stopPropagation();" style="background:transparent;border:1px solid #6e2020;color:#f87171;padding:4px 8px;font-size:12px;border-radius:4px;">🗑️</button></td>
     </tr>`;
   });
 
@@ -1013,6 +1024,7 @@ window.filtrarHist = function(data){
       <td>${r.saida||'<span style="color:var(--muted)">—</span>'}</td>
       <td style="color:var(--muted);font-size:13px">${r.quemSaiu||'<span style="color:var(--muted)">—</span>'}</td>
       <td style="color:var(--muted);font-size:13px">${calcTempo(r.hora,r.saida)}</td>
+      <td><button onclick="abrirEdicao('${r.id}','${r.hora}','${r.placa}','${r.nome.replace(/'/g,"\\'")}','${(r.empresa||"").replace(/'/g,"\\'")}',${r.ocupantes||1},'${r.saida||""}','${(r.quemSaiu||"").replace(/'/g,"\\'")}'); event.stopPropagation();" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 8px;font-size:12px;border-radius:4px;margin-right:3px">✏️</button><button onclick="apagarRegistro('${r.id}','${r.placa} — ${r.nome.replace(/'/g,"\\'")}'); event.stopPropagation();" style="background:transparent;border:1px solid #6e2020;color:#f87171;padding:4px 8px;font-size:12px;border-radius:4px;">🗑️</button></td>
     </tr>`;
   });
   document.getElementById("corpoHist").innerHTML = html;
@@ -1022,12 +1034,12 @@ window.filtrarHist = function(data){
 window.add = async function(){
   const h = document.getElementById("hora").value;
   const p = document.getElementById("placa").value.toUpperCase().trim();
-  const n = document.getElementById("nome").value.trim();
-  porteiroAtual = (document.getElementById("porteiro").value||"").trim();
+  const n = emMaiusculo(document.getElementById("nome").value);
+  porteiroAtual = emMaiusculo(document.getElementById("porteiro").value);
   if(!h||!p||!n){ alert("Preencha hora, placa e nome!"); return; }
   await addDoc(collection(db,"portaria"),{
     data: hoje, hora: h, placa: p, nome: n,
-    empresa: (document.getElementById("empresa").value||"").trim(),
+    empresa: emMaiusculo(document.getElementById("empresa").value),
     ocupantes: Number(document.getElementById("ocupantes").value)||1,
     porteiro: porteiroAtual||"—",
     saida: "", ts: Date.now()
@@ -1043,7 +1055,7 @@ window.add = async function(){
 window.confirmarSaida = async function(id){
   const hora = document.getElementById("saida-"+id).value;
   if(!hora){ alert("Informe a hora de saída"); return; }
-  const quemSaiu = (document.getElementById("quemSaiu-"+id).value||"").trim();
+  const quemSaiu = emMaiusculo(document.getElementById("quemSaiu-"+id).value);
   await updateDoc(doc(db,"portaria",id),{saida:hora, quemSaiu});
 };
 
@@ -1063,6 +1075,276 @@ window.exportar = function(){
   a.click();
 };
 
+async function obterLogoRelatorio(){
+  return await new Promise(resolve => {
+    try {
+      const baseImg = document.querySelector("header img");
+      const src = (baseImg && baseImg.src) ? baseImg.src : "logo-pch.png";
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = function(){
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.naturalWidth || 512;
+          canvas.height = img.naturalHeight || 512;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img,0,0);
+          resolve(canvas.toDataURL("image/png"));
+        } catch(_) { resolve(null); }
+      };
+      img.onerror = function(){ resolve(null); };
+      img.src = src;
+    } catch(_) { resolve(null); }
+  });
+}
+
+window.baixarRelatorio = async function(){
+  if(!window.jspdf || !window.jspdf.jsPDF){
+    alert("NAO FOI POSSIVEL CARREGAR O GERADOR DE PDF.");
+    return;
+  }
+
+  const agora = new Date();
+  const carimbo = `${agora.toLocaleDateString("pt-BR")} ${agora.toLocaleTimeString("pt-BR")}`;
+
+  let titulo = "RELATORIO DE PORTARIA";
+  let nomeArquivo = "relatorio-portaria";
+  let resumoLinhas = [];
+  let colunas = [];
+  let linhasTabela = [];
+
+  if(abaAtiva === "hoje"){
+    const lista = [...registrosHoje].sort((a,b)=>(a.ts||0)-(b.ts||0));
+    const dentro = lista.filter(r=>!r.saida).length;
+    const saiu = lista.filter(r=>!!r.saida).length;
+
+    titulo = `RELATORIO DE PORTARIA - HOJE (${hoje})`;
+    nomeArquivo = `relatorio-portaria-hoje-${hoje}`;
+    resumoLinhas = [
+      `GERADO EM: ${carimbo}`,
+      `TOTAL: ${lista.length} | NO PATIO: ${dentro} | SAIU: ${saiu}`
+    ];
+    colunas = ["DATA","PLACA","NOME","EMPRESA","PORTEIRO","ENTRADA","SAIDA","STATUS"];
+    linhasTabela = lista.map(r => [
+      emMaiusculo(r.data||""),
+      emMaiusculo(r.placa||""),
+      emMaiusculo(r.nome||""),
+      emMaiusculo(r.empresa||"-"),
+      emMaiusculo(r.porteiro||"-"),
+      emMaiusculo(r.hora||"-"),
+      emMaiusculo(r.saida||"-"),
+      r.saida ? "SAIU" : "NO PATIO"
+    ]);
+  } else if(dataSelecionada){
+    const lista = [...(historicoCache[dataSelecionada]||[])].sort((a,b)=> (a.hora||"").localeCompare(b.hora||""));
+    const dentro = lista.filter(r=>!r.saida).length;
+    const saiu = lista.filter(r=>!!r.saida).length;
+
+    titulo = `RELATORIO DE PORTARIA - HISTORICO (${dataSelecionada})`;
+    nomeArquivo = `relatorio-portaria-${dataSelecionada}`;
+    resumoLinhas = [
+      `GERADO EM: ${carimbo}`,
+      `DATA: ${dataSelecionada}`,
+      `TOTAL: ${lista.length} | NO PATIO: ${dentro} | SAIU: ${saiu}`
+    ];
+    colunas = ["PLACA","NOME","EMPRESA","PORTEIRO","ENTRADA","SAIDA","QUEM SAIU","STATUS"];
+    linhasTabela = lista.map(r => [
+      emMaiusculo(r.placa||""),
+      emMaiusculo(r.nome||""),
+      emMaiusculo(r.empresa||"-"),
+      emMaiusculo(r.porteiro||"-"),
+      emMaiusculo(r.hora||"-"),
+      emMaiusculo(r.saida||"-"),
+      emMaiusculo(r.quemSaiu||"-"),
+      r.saida ? "SAIU" : "NO PATIO"
+    ]);
+  } else {
+    const datas = Object.keys(historicoCache)
+      .filter(k => k !== hoje)
+      .sort((a,b) => b.localeCompare(a));
+    const resumoMes = {};
+
+    datas.forEach(d=>{
+      const [y,m] = d.split("-");
+      const chave = `${y}-${m}`;
+      if(!resumoMes[chave]) resumoMes[chave] = {dias:0,total:0,dentro:0,saiu:0};
+      const regs = historicoCache[d] || [];
+      resumoMes[chave].dias += 1;
+      resumoMes[chave].total += regs.length;
+      resumoMes[chave].dentro += regs.filter(r=>!r.saida).length;
+      resumoMes[chave].saiu += regs.filter(r=>!!r.saida).length;
+    });
+
+    titulo = "RELATORIO GERAL DO HISTORICO";
+    nomeArquivo = "relatorio-portaria-historico-geral";
+    resumoLinhas = [
+      `GERADO EM: ${carimbo}`,
+      `MESES ENCONTRADOS: ${Object.keys(resumoMes).length}`
+    ];
+    colunas = ["MES","DIAS","TOTAL","NO PATIO","SAIU"];
+    linhasTabela = Object.keys(resumoMes)
+      .sort((a,b)=>b.localeCompare(a))
+      .map(chave => {
+        const r = resumoMes[chave];
+        return [chave, String(r.dias), String(r.total), String(r.dentro), String(r.saiu)];
+      });
+  }
+
+  if(!linhasTabela.length){
+    linhasTabela = [["NENHUM REGISTRO ENCONTRADO.","","","",""]];
+    if(colunas.length === 8) linhasTabela = [["NENHUM REGISTRO ENCONTRADO.","","","","","","",""]];
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:"l", unit:"mm", format:"a4"});
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const margemX = 10;
+  const logoData = await obterLogoRelatorio();
+
+  const desenharCabecalho = () => {
+    doc.setFillColor(30,58,95);
+    doc.rect(0,0,pageW,24,"F");
+    doc.setFillColor(245,158,11);
+    doc.rect(0,24,pageW,1.2,"F");
+    if(logoData){
+      try { doc.addImage(logoData,"PNG",8,4,15,15); } catch(_) {}
+    }
+    doc.setTextColor(255,255,255);
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(11);
+    doc.text("CONTROLE DE PORTARIA", logoData ? 26 : 10, 10);
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(8.5);
+    doc.text("BUCAGRANS - RELATORIO OFICIAL", logoData ? 26 : 10, 15);
+    doc.text(`GERADO: ${carimbo}`, pageW - 10, 10, {align:"right"});
+    doc.text(`ABA: ${abaAtiva.toUpperCase()}`, pageW - 10, 15, {align:"right"});
+    doc.setTextColor(20,20,20);
+  };
+
+  desenharCabecalho();
+
+  let y = 31;
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(12);
+  doc.setTextColor(30,58,95);
+  doc.text(emMaiusculo(titulo), margemX, y);
+  y += 5;
+
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(8.5);
+  doc.setTextColor(60,60,60);
+  resumoLinhas.forEach(l => {
+    doc.text(emMaiusculo(l), margemX, y);
+    y += 4;
+  });
+
+  doc.autoTable({
+    startY: y + 2,
+    head: [colunas],
+    body: linhasTabela,
+    margin: {left:margemX, right:margemX},
+    theme: "grid",
+    styles: {
+      fontSize: 7.6,
+      cellPadding: 1.8,
+      textColor: [30,41,59],
+      lineColor: [226,232,240],
+      lineWidth: 0.15
+    },
+    headStyles: {
+      fillColor: [30,58,95],
+      textColor: [255,255,255],
+      fontStyle: "bold",
+      halign: "left"
+    },
+    alternateRowStyles: {
+      fillColor: [248,250,252]
+    },
+    didDrawPage: function(data){
+      if(data.pageNumber > 1) desenharCabecalho();
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(8);
+      doc.setTextColor(120,120,120);
+      doc.text(`PAGINA ${data.pageNumber}`, pageW - 10, pageH - 6, {align:"right"});
+    }
+  });
+
+  doc.save(`${nomeArquivo}.pdf`);
+};
+
+// ===== EDITAR REGISTRO =====
+window.abrirEdicao = function(id, hora, placa, nome, empresa, ocupantes, saida, quemSaiu){
+  document.getElementById("editId").value        = id;
+  document.getElementById("editHora").value      = hora;
+  document.getElementById("editPlaca").value     = emMaiusculo(placa);
+  document.getElementById("editNome").value      = emMaiusculo(nome);
+  document.getElementById("editEmpresa").value   = emMaiusculo(empresa);
+  document.getElementById("editOcupantes").value = ocupantes;
+  document.getElementById("editSaida").value     = saida || "";
+  document.getElementById("editQuemSaiu").value  = emMaiusculo(quemSaiu);
+  document.getElementById("modalEdicao").classList.add("aberto");
+};
+
+window.fecharEdicao = function(){
+  document.getElementById("modalEdicao").classList.remove("aberto");
+};
+
+window.limparSaida = function(){
+  document.getElementById("editSaida").value    = "";
+  document.getElementById("editQuemSaiu").value = "";
+};
+
+window.salvarEdicao = async function(){
+  const id        = document.getElementById("editId").value;
+  const hora      = document.getElementById("editHora").value;
+  const placa     = document.getElementById("editPlaca").value.toUpperCase().trim();
+  const nome      = emMaiusculo(document.getElementById("editNome").value);
+  const empresa   = emMaiusculo(document.getElementById("editEmpresa").value);
+  const ocupantes = Number(document.getElementById("editOcupantes").value)||1;
+  const saida     = document.getElementById("editSaida").value || "";
+  const quemSaiu  = emMaiusculo(document.getElementById("editQuemSaiu").value);
+  if(!id||!hora||!placa||!nome){ alert("Preencha hora, placa e nome!"); return; }
+  try {
+    await updateDoc(doc(db,"portaria",id),{ hora, placa, nome, empresa, ocupantes, saida, quemSaiu });
+    const patch = { hora, placa, nome, empresa, ocupantes, saida, quemSaiu };
+    for(const key of Object.keys(historicoCache)){
+      const idx = historicoCache[key].findIndex(r=>r.id===id);
+      if(idx !== -1){ Object.assign(historicoCache[key][idx], patch); break; }
+    }
+    const ri = registrosHoje.findIndex(r=>r.id===id);
+    if(ri !== -1) Object.assign(registrosHoje[ri], patch);
+    fecharEdicao();
+    if(abaAtiva === "hoje") renderHoje();
+    else if(dataSelecionada) renderHistorico(dataSelecionada);
+  } catch(e){
+    alert("Erro ao salvar: " + e.message);
+  }
+};
+
+// ===== APAGAR REGISTRO =====
+window.apagarRegistro = async function(id, descricao){
+  if(!confirm(`Apagar registro:\n${descricao}\n\nEsta ação não pode ser desfeita!`)) return;
+  try {
+    await deleteDoc(doc(db,"portaria",id));
+    for(const key of Object.keys(historicoCache)){
+      const idx = historicoCache[key].findIndex(r=>r.id===id);
+      if(idx !== -1){ historicoCache[key].splice(idx,1); break; }
+    }
+    const ri = registrosHoje.findIndex(r=>r.id===id);
+    if(ri !== -1) registrosHoje.splice(ri,1);
+    if(abaAtiva === "hoje") renderHoje();
+    else if(dataSelecionada) renderHistorico(dataSelecionada);
+  } catch(e){
+    alert("Erro ao apagar: " + e.message);
+  }
+};
+
+// fechar modal clicando fora
+document.getElementById("modalEdicao").addEventListener("click", function(e){
+  if(e.target === this) fecharEdicao();
+});
+
 // ===== INIT =====
 renderTabs();
 renderHoje();
@@ -1070,5 +1352,84 @@ carregarDatasHistorico();
 ouvirHoje();
 </script>
 
+<!-- MODAL EDIÇÃO -->
+<div id="modalEdicao">
+  <div class="modal-box">
+    <h3>✏️ Editar Registro</h3>
+    <input type="hidden" id="editId">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="modal-campo">
+        <label>Hora de Entrada</label>
+        <input type="time" id="editHora">
+      </div>
+      <div class="modal-campo">
+        <label>Ocupantes</label>
+        <input type="number" id="editOcupantes" min="1" value="1">
+      </div>
+    </div>
+    <div class="modal-campo">
+      <label>Placa</label>
+      <input type="text" id="editPlaca" placeholder="PLACA">
+    </div>
+    <div class="modal-campo">
+      <label>Nome</label>
+      <input type="text" id="editNome" placeholder="NOME">
+    </div>
+    <div class="modal-campo">
+      <label>Empresa</label>
+      <input type="text" id="editEmpresa" placeholder="EMPRESA">
+    </div>
+    <div style="border-top:1px solid var(--border);margin:14px 0 10px;padding-top:12px;">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Saída</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="modal-campo" style="margin-bottom:0">
+          <label>Hora de Saída</label>
+          <input type="time" id="editSaida">
+        </div>
+        <div class="modal-campo" style="margin-bottom:0">
+          <label>Quem Saiu</label>
+          <input type="text" id="editQuemSaiu" placeholder="Nome de quem saiu">
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <button onclick="limparSaida()" style="background:transparent;border:1px solid var(--border);color:var(--muted);font-size:12px;padding:4px 10px;border-radius:4px;font-weight:600;">✕ Limpar saída</button>
+      </div>
+    </div>
+    <div class="modal-acoes">
+      <button class="btn-cancelar" onclick="fecharEdicao()">Cancelar</button>
+      <button onclick="salvarEdicao()">💾 Salvar</button>
+    </div>
+  </div>
+</div>
+
 </body>
-</html>
+<script>
+// Converter o valor real para maiúsculas em todos os campos de texto (inclui inputs sem atributo type)
+;(function(){
+  const selector = 'input:not([type]), input[type="text"], input[type="search"], input[type="tel"], input[type="email"], textarea';
+  function toUpper(e){
+    try{ const v = e.target.value; e.target.value = v.toUpperCase(); }catch(e){}
+  }
+  document.querySelectorAll(selector).forEach(el=>{
+    el.addEventListener('input', toUpper, {passive:false});
+    el.addEventListener('blur', toUpper);
+  });
+  // observe future added elements
+  const obs = new MutationObserver(muts=>{
+    muts.forEach(m=>{
+      m.addedNodes && m.addedNodes.forEach(node=>{
+        if(!(node instanceof HTMLElement)) return;
+        if(node.matches && node.matches(selector)){
+          node.addEventListener('input', toUpper, {passive:false});
+          node.addEventListener('blur', toUpper);
+        }
+        node.querySelectorAll && node.querySelectorAll(selector).forEach(el=>{
+          el.addEventListener('input', toUpper, {passive:false});
+          el.addEventListener('blur', toUpper);
+        });
+      });
+    });
+  });
+  obs.observe(document.body,{childList:true,subtree:true});
+})();
+</script>
